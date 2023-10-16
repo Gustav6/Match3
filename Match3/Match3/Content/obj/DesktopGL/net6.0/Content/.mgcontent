@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SourceFileCollection xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Profile>Reach</Profile>
+  <Platform>DesktopGL</Platform>
+  <Config />
+  <SourceFiles>
+    <File>C:/Users/gustav.ekstrom1/Documents/GitHub/Match3/Match3/Content/gemBlue.png</File>
+    <File>C:/Users/gustav.ekstrom1/Documents/GitHub/Match3/Match3/Content/gemGreen.png</File>
+    <File>C:/Users/gustav.ekstrom1/Documents/GitHub/Match3/Match3/Content/gemPurple.png</File>
+    <File>C:/Users/gustav.ekstrom1/Documents/GitHub/Match3/Match3/Content/gemRed.png</File>
+    <File>C:/Users/gustav.ekstrom1/Documents/GitHub/Match3/Match3/Content/gemYellow.png</File>
+  </SourceFiles>
+  <DestFiles>
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+  </DestFiles>
+</SourceFileCollection>
