@@ -24,7 +24,6 @@ namespace Match3
 
             PlayingField.CreatePlayingField();
 
-            Data.gameObjects.Add(new Gem(new Vector2(200, 200), TextureManager.arrayOfTextures[(int)Data.gemType.greenGemTexture]));
         }
 
         protected override void LoadContent()
@@ -55,7 +54,7 @@ namespace Match3
             {
                 for (int y = 0; y < Data.tileMap.GetLength(1); y++)
                 {
-                    _spriteBatch.Draw(Data.tileMap[x, y].isFilled ? Data.tileMap[x, y].gem.texutre : TextureManager.tileTexture, new Vector2(x * Data.tileSize, y * Data.tileSize), Color.White);
+                    _spriteBatch.Draw(TextureManager.tileTexture, new Vector2(x * Data.tileSize, y * Data.tileSize), Data.tileMap[x, y].isFilled ? Color.White : Color.Black);
                 }
             }
 

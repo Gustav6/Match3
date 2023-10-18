@@ -24,9 +24,8 @@ namespace Match3
 
         }
 
-        public void Set(Texture2D _texture)
+        public void SetSourceRectangle(Texture2D _texture)
         {
-            origin = new Vector2(_texture.Width / 2, _texture.Height / 2);
             soureceRectangle = new Rectangle(0, 0, _texture.Width, _texture.Height);
         }
 

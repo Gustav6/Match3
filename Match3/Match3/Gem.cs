@@ -16,7 +16,7 @@ namespace Match3
             texutre = gemType;
             color = Color.White;
             scale = new Vector2(1, 1);
-            Set(TextureManager.arrayOfTextures[0]);
+            SetSourceRectangle(TextureManager.arrayOfTextures[0]);
         }
 
         public override void Update(GameTime gameTime)

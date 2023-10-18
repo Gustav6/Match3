@@ -19,10 +19,10 @@ namespace Match3
             {
                 for (int y = 0; y < Data.tileMap.GetLength(1); y++)
                 {
-                    if (Data.tileMap[x, y].gem != null)
-                    {
+                    //if (Data.tileMap[x, y].gem != null)
+                    //{
 
-                    }
+                    //}
                 }
             }
         }
@@ -50,18 +50,35 @@ namespace Match3
 
         public static void CreatePlayingField()
         {
-            Data.tileMap = new Tile[Data.gameWidth, Data.gameHeight];
+            int[,] tempMap = new int[,]
+            {
+                {1, 1, 1, 1, 1, 1, 1},
+                {1, 1, 1, 1, 1, 1, 1},
+                {0, 1, 1, 1, 1, 1, 0},
+                {0, 0, 1, 1, 1, 0, 0},
+                {0, 1, 1, 0, 1, 1, 0},
+                {0, 0, 1, 1, 1, 0, 0},
+                {0, 1, 1, 1, 1, 1, 0},
+                {1, 1, 1, 1, 1, 1, 1},
+                {1, 1, 1, 1, 1, 1, 1}
+            };
+            Data.tileMap = new Tile[tempMap.GetLength(1), tempMap.GetLength(0)];
 
-            //SpawnRandomGems();
+            CreateTileMap(tempMap);
         }
 
-        public static void SpawnRandomGems()
+        public static void CreateTileMap(int[,] tempMap)
         {
             for (int x = 0; x < Data.tileMap.GetLength(0); x++)
             {
                 for (int y = 0; y < Data.tileMap.GetLength(1); y++)
                 {
+                    int number = tempMap[y, x];
 
+                    if (number == 1)
+                    {
+                        Data.tileMap[x, y].isFilled = true;
+                    }
                 }
             }
         }
