@@ -22,7 +22,7 @@ namespace Match3
         {
             base.Initialize();
 
-            PlayingField.CreatePlayingField();
+            PlayingField.FinalPlayingField();
 
         }
 
@@ -54,7 +54,7 @@ namespace Match3
             {
                 for (int y = 0; y < Data.tileMap.GetLength(1); y++)
                 {
-                    _spriteBatch.Draw(TextureManager.tileTexture, new Vector2(x * Data.tileSize, y * Data.tileSize), Data.tileMap[x, y].isFilled ? Color.White : Color.Black);
+                    _spriteBatch.Draw(TextureManager.tileTexture, new Vector2(x * Data.tileSize, y * Data.tileSize), Data.tileMap[x, y].canHaveGem ? Color.White : Color.Black * 0f);
                 }
             }
 

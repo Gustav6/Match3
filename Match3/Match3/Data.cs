@@ -19,6 +19,12 @@ namespace Match3
         public static int bufferWidth = 1920;
         public static int bufferHeight = 1080;
 
+        public static int Random(int minimumValue, int maximumValue)
+        {
+            Random rng = new Random();
+            return rng.Next(minimumValue, maximumValue);
+        }
+
         public enum gemType
         {
             blueGemTexture,

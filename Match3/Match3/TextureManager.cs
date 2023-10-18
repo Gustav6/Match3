@@ -12,7 +12,7 @@ namespace Match3
     public static class TextureManager
     {
         public static Texture2D tileTexture;
-        public static Texture2D[] arrayOfTextures = new Texture2D[10];
+        public static Texture2D[] textures = new Texture2D[5];
 
         public static void LoadTextures(ContentManager content, GraphicsDevice graphicsDevice)
         {
@@ -24,11 +24,11 @@ namespace Match3
             }
             tileTexture.SetData<Color>(colorArray);
 
-            arrayOfTextures[(int)Data.gemType.blueGemTexture] = (content.Load<Texture2D>("gemBlue"));
-            arrayOfTextures[(int)Data.gemType.greenGemTexture] = content.Load<Texture2D>("gemGreen");
-            arrayOfTextures[(int)Data.gemType.purpleGemTexture] = content.Load<Texture2D>("gemPurple");
-            arrayOfTextures[(int)Data.gemType.redGemTexture] = content.Load<Texture2D>("gemRed");
-            arrayOfTextures[(int)Data.gemType.yellowgemTexture] = content.Load<Texture2D>("gemYellow");
+            textures[(int)Data.gemType.blueGemTexture] = (content.Load<Texture2D>("gemBlue"));
+            textures[(int)Data.gemType.greenGemTexture] = content.Load<Texture2D>("gemGreen");
+            textures[(int)Data.gemType.purpleGemTexture] = content.Load<Texture2D>("gemPurple");
+            textures[(int)Data.gemType.redGemTexture] = content.Load<Texture2D>("gemRed");
+            textures[(int)Data.gemType.yellowgemTexture] = content.Load<Texture2D>("gemYellow");
         }
     }
 }

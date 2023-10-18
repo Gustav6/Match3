@@ -8,6 +8,7 @@ namespace Match3
 {
     public struct Tile
     {
+        public bool canHaveGem;
         public bool isFilled;
         public Gem gem;
     }
