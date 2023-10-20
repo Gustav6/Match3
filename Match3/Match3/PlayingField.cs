@@ -13,14 +13,8 @@ namespace Match3
 {
     public static class PlayingField
     {
-        //private static Gem pastGem;
-        //private static Gem currentGem;
         private static int[,] pastGem;
         private static int[,] currentGem;
-        private static Gem temp;
-        static int mouseY;
-        static int mouseX;
-        //static Vector2 temp;
 
         public static void Update()
         {
@@ -31,60 +25,81 @@ namespace Match3
 
         public static void MoveGem()
         {
-            mouseX = InputManager.currentMS.X / Data.tileSize;
-            mouseY = InputManager.currentMS.Y / Data.tileSize;
+            // Inputs
+            int mouseX = InputManager.currentMS.X / Data.tileSize;
+            int mouseY = InputManager.currentMS.Y / Data.tileSize;
 
-            SelectedGem();
+            if (InputManager.MouseHasBeenPressed(InputManager.currentMS.LeftButton, InputManager.prevMS.LeftButton))
+                SelectedGem(mouseX, mouseY);
 
             if (currentGem != null && pastGem != null && pastGem != currentGem)
             {
-                temp = Data.tileMap[pastGem.GetLength(0), pastGem.GetLength(1)].gem;
+                // Check if object can or cant switch
+                if (pastGem.GetLength(0) + 1 == currentGem.GetLength(0) && pastGem.GetLength(1) == currentGem.GetLength(1) || 
+                    pastGem.GetLength(0) - 1 == currentGem.GetLength(0) && pastGem.GetLength(1) == currentGem.GetLength(1) ||
+                    pastGem.GetLength(0) == currentGem.GetLength(0) && pastGem.GetLength(1) + 1 == currentGem.GetLength(1) || 
+                    pastGem.GetLength(0) == currentGem.GetLength(0) && pastGem.GetLength(1) - 1 == currentGem.GetLength(1))
+                {
+                    Gem temp = Data.tileMap[pastGem.GetLength(0), pastGem.GetLength(1)].gem;
 
-                Data.tileMap[pastGem.GetLength(0), pastGem.GetLength(1)].gem = Data.tileMap[currentGem.GetLength(0), currentGem.GetLength(1)].gem;
-                Data.tileMap[currentGem.GetLength(0), currentGem.GetLength(1)].gem = temp;
+                    Data.tileMap[pastGem.GetLength(0), pastGem.GetLength(1)].gem = Data.tileMap[currentGem.GetLength(0), currentGem.GetLength(1)].gem;
+                    Data.tileMap[currentGem.GetLength(0), currentGem.GetLength(1)].gem = temp;
+
+                    Data.tileMap[currentGem.GetLength(0), currentGem.GetLength(1)].gem.color = Color.White;
+                    Data.tileMap[pastGem.GetLength(0), pastGem.GetLength(1)].gem.color = Color.White;
+                }
+                else if (pastGem.GetLength(0) + 1 == currentGem.GetLength(0) && pastGem.GetLength(1) != currentGem.GetLength(1) ||
+                         pastGem.GetLength(0) - 1 == currentGem.GetLength(0) && pastGem.GetLength(1) != currentGem.GetLength(1) ||
+                         pastGem.GetLength(0) != currentGem.GetLength(0) && pastGem.GetLength(1) + 1 == currentGem.GetLength(1) ||
+                         pastGem.GetLength(0) != currentGem.GetLength(0) && pastGem.GetLength(1) - 1 == currentGem.GetLength(1))
+                {
+                    Data.tileMap[currentGem.GetLength(0), currentGem.GetLength(1)].gem.color = Color.White;
+                    Data.tileMap[pastGem.GetLength(0), pastGem.GetLength(1)].gem.color = Color.White;
+                }
+
+                // Resets variables
 
                 currentGem = null;
                 pastGem = null;
             }
 
             if (currentGem != null)
-            {
                 pastGem = currentGem;
-            }
         }
 
-        public static void SelectedGem()
+        public static void SelectedGem(int _mouseX, int _mouseY)
         {
-            if (0 <= mouseX && mouseX < Data.tileMap.GetLength(0))
-                if (0 <= mouseY && mouseY < Data.tileMap.GetLength(1))
-                    if (InputManager.MouseHasBeenPressed(InputManager.currentMS.LeftButton, InputManager.prevMS.LeftButton))
-                        currentGem = new int[mouseX, mouseY];
+            if (0 <= _mouseX && _mouseX < Data.tileMap.GetLength(0))
+                if (0 <= _mouseY && _mouseY < Data.tileMap.GetLength(1))
+                        if (Data.tileMap[_mouseX, _mouseY].canHaveGem)
+                        {
+                            currentGem = new int[_mouseX, _mouseY];
+
+                            // Make a visual change when selecting object
+                            Data.tileMap[currentGem.GetLength(0), currentGem.GetLength(1)].gem.color *= 0.8f;
+
+                            // Revert change if you press same object and or invalid target
+                            if (pastGem != null && Data.tileMap[currentGem.GetLength(0), currentGem.GetLength(1)].gem == Data.tileMap[pastGem.GetLength(0), pastGem.GetLength(1)].gem)
+                                Data.tileMap[pastGem.GetLength(0), pastGem.GetLength(1)].gem.color = Color.White;
+                        }
         }
 
         private static void Matches()
         {
+            // Check tilemap if 3 or more horizontal objects make a match
             for (int x = 0; x < Data.tileMap.GetLength(0); x++)
             {
                 for (int y = 0; y < Data.tileMap.GetLength(1); y++)
                 {
-                    bool matchFound = true;
-
-                    // Check tilemap if 3 or more neighbours makes a match
-
-                    //if (Data.tileMap[x, y])
-                    //{
-
-                    //}
 
                 }
             }
 
-            for (int x = 0; x < Data.tileMap.GetLength(0); x++)
+            // Check tilemap if 3 or more veritcal objects make a match
+            for (int y = 0; y < Data.tileMap.GetLength(1); y++)
             {
-                for (int y = 0; y < Data.tileMap.GetLength(1); y++)
+                for (int x = 0; x < Data.tileMap.GetLength(0); x++)
                 {
-                    // Check tilemap if 3 or more neighbours makes a match
-
 
                 }
             }
@@ -95,7 +110,7 @@ namespace Match3
             return 0 <= y && y < Data.tileMap.GetLength(1) && 0 <= x && x < Data.tileMap.GetLength(0);
         }
 
-        public static void FinalPlayingField()
+        public static void CompletedPlayingField()
         {
             CreatePlayingField();
             SpawnGems();
@@ -106,15 +121,12 @@ namespace Match3
             for (int x = 0; x < Data.tileMap.GetLength(0); x++)
                 for (int y = 0; y < Data.tileMap.GetLength(1); y++)
                     if (Data.tileMap[x, y].canHaveGem)
-                    {
-                        Data.tileMap[x, y] = new Tile() { gem = new Gem(new Vector2(x * Data.tileSize, y * Data.tileSize), Data.Random(0, TextureManager.textures.Length)) };
-                        // Controll before spawning if it will make a match
-                        //Data.gameObjects.Add(new Gem(new Vector2(x * Data.tileSize, y * Data.tileSize), Data.Random(0, TextureManager.textures.Length)));
-                    }
+                        Data.tileMap[x, y] = new Tile() { gem = new Gem(new Vector2(x * Data.tileSize, y * Data.tileSize), Data.Random(0, TextureManager.textures.Length)), canHaveGem = true, removed = false };
         }
 
         public static void CreatePlayingField()
         {
+            // Create a map that shows where gems can be (0 = cant, 1 = can)
             int[,] tempMap = new int[,]
             {
                 {0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0},
@@ -129,6 +141,7 @@ namespace Match3
                 {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},
                 {0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0},
             };
+            // Set project wide tilemap to temp with the inverse of the temp map
             Data.tileMap = new Tile[tempMap.GetLength(1), tempMap.GetLength(0)];
 
             CreateTileMap(tempMap);
@@ -142,9 +155,7 @@ namespace Match3
                     int number = tempMap[y, x];
 
                     if (number == 1)
-                    {
                         Data.tileMap[x, y].canHaveGem = true;
-                    }
                 }
         }
     }

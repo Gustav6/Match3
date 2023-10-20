@@ -22,8 +22,7 @@ namespace Match3
         {
             base.Initialize();
 
-            PlayingField.FinalPlayingField();
-
+            PlayingField.CompletedPlayingField();
         }
 
         protected override void LoadContent()
@@ -56,7 +55,7 @@ namespace Match3
                 {
                     if (Data.tileMap[x, y].gem != null)
                     {
-                        _spriteBatch.Draw(Data.tileMap[x, y].gem.texutre, new Vector2(x * Data.tileSize, y * Data.tileSize), Color.White);
+                        _spriteBatch.Draw(Data.tileMap[x, y].gem.texutre, new Vector2(x * Data.tileSize, y * Data.tileSize), Data.tileMap[x, y].gem.color);
                     }
 
                     if (Data.tileMap[x, y].canHaveGem)
