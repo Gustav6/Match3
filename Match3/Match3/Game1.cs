@@ -54,7 +54,15 @@ namespace Match3
             {
                 for (int y = 0; y < Data.tileMap.GetLength(1); y++)
                 {
-                    _spriteBatch.Draw(TextureManager.tileTexture, new Vector2(x * Data.tileSize, y * Data.tileSize), Data.tileMap[x, y].canHaveGem ? Color.White : Color.Black * 0f);
+                    if (Data.tileMap[x, y].gem != null)
+                    {
+                        _spriteBatch.Draw(Data.tileMap[x, y].gem.texutre, new Vector2(x * Data.tileSize, y * Data.tileSize), Color.White);
+                    }
+
+                    if (Data.tileMap[x, y].canHaveGem)
+                    {
+                        //_spriteBatch.Draw(TextureManager.tileTexture, new Vector2(x * Data.tileSize, y * Data.tileSize), Color.White);
+                    }
                 }
             }
 

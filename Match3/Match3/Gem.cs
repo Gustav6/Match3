@@ -26,18 +26,19 @@ namespace Match3
 
         public override void Update(GameTime gameTime)
         {
-            boundingBox.Location = position.ToPoint();
             base.Update(gameTime);
+            boundingBox.Location = position.ToPoint();
         }
 
-        public void DrawBoundingBox()
+        public void DrawBoundingBox(SpriteBatch spriteBatch)
         {
-
+            spriteBatch.Draw(TextureManager.boundingBoxTexture, boundingBox, Color.White);
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
             base.Draw(spriteBatch);
+            //DrawBoundingBox(spriteBatch);
         }
     }
 }

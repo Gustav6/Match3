@@ -12,6 +12,7 @@ namespace Match3
     public static class TextureManager
     {
         public static Texture2D tileTexture;
+        public static Texture2D boundingBoxTexture;
         public static Texture2D[] textures = new Texture2D[5];
 
         public static void LoadTextures(ContentManager content, GraphicsDevice graphicsDevice)
@@ -23,6 +24,9 @@ namespace Match3
                 colorArray[i] = Color.White;
             }
             tileTexture.SetData<Color>(colorArray);
+
+            boundingBoxTexture = new Texture2D(graphicsDevice, 1, 1);
+            boundingBoxTexture.SetData<Color>(new Color[] { Color.Green * 0.8f });
 
             textures[(int)Data.gemType.blueGemTexture] = (content.Load<Texture2D>("gemBlue"));
             textures[(int)Data.gemType.greenGemTexture] = content.Load<Texture2D>("gemGreen");
