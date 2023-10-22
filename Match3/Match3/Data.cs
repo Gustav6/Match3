@@ -24,6 +24,10 @@ namespace Match3
             Random rng = new Random();
             return rng.Next(minimumValue, maximumValue);
         }
+        public static bool InBounds(int x, int y)
+        {
+            return 0 <= y && y < Data.tileMap.GetLength(1) && 0 <= x && x < Data.tileMap.GetLength(0);
+        }
 
         public enum gemType
         {

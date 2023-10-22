@@ -22,7 +22,7 @@ namespace Match3
         {
             base.Initialize();
 
-            PlayingField.CompletedPlayingField();
+            CreatePlayingField.FinalizedPlayingField();
         }
 
         protected override void LoadContent()
@@ -38,16 +38,16 @@ namespace Match3
                 Exit();
 
             GameManger.Update(gameTime);
-            PlayingField.Update();
 
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Black);
 
             _spriteBatch.Begin();
+
 
             for (int x = 0; x < Data.tileMap.GetLength(0); x++)
             {
@@ -55,12 +55,7 @@ namespace Match3
                 {
                     if (Data.tileMap[x, y].gem != null)
                     {
-                        _spriteBatch.Draw(Data.tileMap[x, y].gem.texutre, new Vector2(x * Data.tileSize, y * Data.tileSize), Data.tileMap[x, y].gem.color);
-                    }
-
-                    if (Data.tileMap[x, y].canHaveGem)
-                    {
-                        //_spriteBatch.Draw(TextureManager.tileTexture, new Vector2(x * Data.tileSize, y * Data.tileSize), Color.White);
+                        _spriteBatch.Draw(Data.tileMap[x, y].gem.texutre, new Vector2((int)(x * Data.tileSize) + 64, (int)(y * Data.tileSize) + 64), Data.tileMap[x, y].gem.color);
                     }
                 }
             }

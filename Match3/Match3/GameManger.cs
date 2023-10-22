@@ -7,11 +7,12 @@ using System.Threading.Tasks;
 
 namespace Match3
 {
-    public class GameManger
+    public static class GameManger
     {
         public static void Update(GameTime gameTime)
         {
             InputManager.GetInput();
+            PlayingField.Update();
             UpdateLoop(gameTime);
             RemoveLoop();
         }
@@ -33,30 +34,6 @@ namespace Match3
                     Data.gameObjects.RemoveAt(i);
                 }
             }
-        }
-
-        public static bool CanMove()
-        {
-            for (int x = 0; x < Data.tileMap.GetLength(0); x++)
-            {
-                for (int y = 0; y < Data.tileMap.GetLength(1); y++)
-                {
-                    // Check if one move can get match with 3 or more
-
-                }
-            }
-
-            return false;
-        }
-
-        public static bool GameOver()
-        {
-            if (!CanMove())
-            {
-                return true;
-            }
-
-            return false;
         }
     }
 }
