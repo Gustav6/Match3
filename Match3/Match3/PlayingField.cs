@@ -49,12 +49,12 @@ namespace Match3
                 if (canSwitch)
                 {
                     // Saved gem positions
-                    Gem newCurrentPos = Data.tileMap[prevPosX, prevPosY].gem;
-                    Gem newPrevPos = Data.tileMap[currnetPosX, currnetPosY].gem;
+                    Texture2D newPrevPos = Data.tileMap[prevPosX, prevPosY].gem.texutre;
+                    Texture2D newCurrentPos = Data.tileMap[currnetPosX, currnetPosY].gem.texutre;
 
                     // Switch the gems positions
-                    Data.tileMap[prevPosX, prevPosY].gem = newPrevPos;
-                    Data.tileMap[currnetPosX, currnetPosY].gem = newCurrentPos;
+                    Data.tileMap[prevPosX, prevPosY].gem.texutre = newCurrentPos;
+                    Data.tileMap[currnetPosX, currnetPosY].gem.texutre = newPrevPos;
 
                     // Reset visual selection change after gems w
                     VisualChange(currnetPosX, currnetPosY, 1);
@@ -68,8 +68,8 @@ namespace Match3
 
                     if (tempCheck.Count == 0)
                     {
-                        Data.tileMap[prevPosX, prevPosY].gem = newCurrentPos;
-                        Data.tileMap[currnetPosX, currnetPosY].gem = newPrevPos;
+                        Data.tileMap[prevPosX, prevPosY].gem.texutre = newCurrentPos;
+                        Data.tileMap[currnetPosX, currnetPosY].gem.texutre = newPrevPos;
                     }
 
                     tempCheck.Clear();
@@ -91,8 +91,8 @@ namespace Match3
 
         public static void GetSelectedGem()
         {
-            int mouseX = (int)(InputManager.currentMS.X / Data.tileSize - 1);
-            int mouseY = (int)(InputManager.currentMS.Y / Data.tileSize - 1);
+            int mouseX = (int)(InputManager.currentMS.X / Data.tileSize);
+            int mouseY = (int)(InputManager.currentMS.Y / Data.tileSize);
 
             if (0 <= mouseX && mouseX < Data.tileMap.GetLength(0))
                 if (0 <= mouseY && mouseY < Data.tileMap.GetLength(1))
@@ -131,7 +131,6 @@ namespace Match3
                     {
                         //Data.gameObjects.Add(new Gem(new Vector2(x * Data.tileSize + Data.tileSize, y * Data.tileSize), Data.tileMap[x, y - 1].gem.gemType, 100));
                         //Data.tileMap[x, y - 1].gem = null;
-                        Data.tileMap[x, y - 1].gem.position = new Vector2(200, 200);
                     }
                 }
             }

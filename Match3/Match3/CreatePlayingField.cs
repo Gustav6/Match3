@@ -21,7 +21,7 @@ namespace Match3
                 for (int y = 0; y < Data.tileMap.GetLength(1); y++)
                     if (Data.tileMap[x, y].canHaveGem)
                     {
-                        Data.tileMap[x, y] = new Tile() { gem = new Gem(new Vector2(x, y), Data.Random(0, TextureManager.textures.Length)) };   
+                        Data.tileMap[x, y] = new Tile() { gem = new Gem(new Vector2(x * Data.tileSize, y * Data.tileSize), Data.Random(0, TextureManager.textures.Length)), canHaveGem = true };   
 
                         if (Data.InBounds(x, y - 2) && Data.tileMap[x, y - 2].gem != null && Data.tileMap[x, y].gem != null)
                             if (Data.tileMap[x, y].gem.texutre == Data.tileMap[x, y - 2].gem.texutre)

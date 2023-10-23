@@ -20,7 +20,6 @@ namespace Match3
             gemType = _gemType;
             color = Color.White;
             moveSpeed = 100;
-            velociy.Y = 1;
             scale = new Vector2(1, 1);
 
             boundingBox = new Rectangle((int)position.X, (int)position.Y, texutre.Width, texutre.Height);
@@ -30,7 +29,18 @@ namespace Match3
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
-            //boundingBox.Location = position.ToPoint();
+        }
+
+        public void Dir(String dir)
+        {
+            if (dir == "Left")
+                velociy = new Vector2(-1, 0);
+            if (dir == "Right")
+                velociy = new Vector2(1, 0);
+            if (dir == "Up")
+                velociy = new Vector2(0, -1);
+            if (dir == "Down")
+                velociy = new Vector2(0, 1);
         }
 
         public void DrawBoundingBox(SpriteBatch spriteBatch)
@@ -41,7 +51,7 @@ namespace Match3
         public override void Draw(SpriteBatch spriteBatch)
         {
             base.Draw(spriteBatch);
-            //DrawBoundingBox(spriteBatch);
+            DrawBoundingBox(spriteBatch);
         }
     }
 }
