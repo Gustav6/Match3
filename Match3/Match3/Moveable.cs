@@ -20,10 +20,10 @@ namespace Match3
 
         public void Move(GameTime gameTime)
         {
-            if (velociy != Vector2.Zero)
-                velociy.Normalize();
+            //if (velociy != Vector2.Zero)
+            //    velociy.Normalize();
 
-            position += velociy * moveSpeed * (float)gameTime.ElapsedGameTime.Seconds;
+            position += velociy * moveSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
         }
     }
 }

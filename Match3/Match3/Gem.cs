@@ -11,13 +11,16 @@ namespace Match3
     public class Gem : Moveable
     {
         public Rectangle boundingBox;
+        public int gemType;
 
-        public Gem(Vector2 startPosition, int gemType)
+        public Gem(Vector2 startPosition, int _gemType)
         {
             position = startPosition;
-            texutre = TextureManager.textures[gemType];
+            texutre = TextureManager.textures[_gemType];
+            gemType = _gemType;
             color = Color.White;
             moveSpeed = 100;
+            velociy.Y = 1;
             scale = new Vector2(1, 1);
 
             boundingBox = new Rectangle((int)position.X, (int)position.Y, texutre.Width, texutre.Height);

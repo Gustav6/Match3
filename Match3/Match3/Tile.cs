@@ -9,7 +9,6 @@ namespace Match3
 {
     public struct Tile
     {
-        public bool removed;
         public bool canHaveGem;
         public Gem gem;
     }

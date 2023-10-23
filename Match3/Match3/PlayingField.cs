@@ -20,6 +20,8 @@ namespace Match3
         {
             MoveGem();
             CheckForMatches();
+            MoveGems();
+            SpawnNewGems();
         }
 
         public static void MoveGem()
@@ -40,13 +42,9 @@ namespace Match3
 
                 // Check if object can or cant switch
                 if (prevPosX + 1 == currnetPosX && prevPosY == currnetPosY || prevPosX - 1 == currnetPosX && prevPosY == currnetPosY)
-                {
                     canSwitch = true;
-                }
                 else if (prevPosX == currnetPosX && prevPosY + 1 == currnetPosY || prevPosX == currnetPosX && prevPosY - 1 == currnetPosY)
-                {
                     canSwitch = true;
-                }
 
                 if (canSwitch)
                 {
@@ -59,8 +57,8 @@ namespace Match3
                     Data.tileMap[currnetPosX, currnetPosY].gem = newCurrentPos;
 
                     // Reset visual selection change after gems w
-                    VisualEffect(currnetPosX, currnetPosY, 1);
-                    VisualEffect(prevPosX, prevPosY, 1);
+                    VisualChange(currnetPosX, currnetPosY, 1);
+                    VisualChange(prevPosX, prevPosY, 1);
 
                     // Check if the new position makes a match if not change them back
                     List<Point> tempCheck = new List<Point>();
@@ -79,8 +77,8 @@ namespace Match3
                 else
                 {
                     // Reset visual selection change if gems dont switch
-                    VisualEffect(currnetPosX, currnetPosY, 1);
-                    VisualEffect(prevPosX, prevPosY, 1);
+                    VisualChange(currnetPosX, currnetPosY, 1);
+                    VisualChange(prevPosX, prevPosY, 1);
                 }
 
                 // Resets variables after change
@@ -103,12 +101,12 @@ namespace Match3
                         currentGem = new Point(mouseX, mouseY);
 
                         // Make a visual change when selecting object
-                        VisualEffect(currentGem.Value.X, currentGem.Value.Y, 0.7f);
+                        VisualChange(currentGem.Value.X, currentGem.Value.Y, 0.7f);
 
                         // Revert change if you press same object and or invalid target
                         if (prevGem != null && Data.tileMap[currentGem.Value.X, currentGem.Value.Y].gem == Data.tileMap[prevGem.Value.X, prevGem.Value.Y].gem)
                         {
-                            VisualEffect(currentGem.Value.X, currentGem.Value.Y, 1);
+                            VisualChange(currentGem.Value.X, currentGem.Value.Y, 1);
                             // Resets variables because there was no change
                             prevGem = null;
                             currentGem = null;
@@ -116,10 +114,50 @@ namespace Match3
                     }
         }
 
-        public static void VisualEffect(int positionX, int positionY, float newAlpha)
+        public static void VisualChange(int positionX, int positionY, float newAlpha)
         {
-            if (Data.tileMap[positionX, positionY].gem != null)
-                Data.tileMap[positionX, positionY].gem.color = Color.White * newAlpha;
+            Data.tileMap[positionX, positionY].gem.color = Color.White * newAlpha;
+        }
+
+        public static void MoveGems()
+        {
+            // Move all gems that has empty gem under
+
+            for (int x = 0; x < Data.tileMap.GetLength(0); x++)
+            {
+                for (int y = Data.tileMap.GetLength(1) - 1; y >= 0; y--)
+                {
+                    if (Data.InBounds(x, y - 1) && Data.tileMap[x, y].canHaveGem && Data.tileMap[x, y - 1].gem != null && Data.tileMap[x, y].gem == null)
+                    {
+                        //Data.gameObjects.Add(new Gem(new Vector2(x * Data.tileSize + Data.tileSize, y * Data.tileSize), Data.tileMap[x, y - 1].gem.gemType, 100));
+                        //Data.tileMap[x, y - 1].gem = null;
+                        Data.tileMap[x, y - 1].gem.position = new Vector2(200, 200);
+                    }
+                }
+            }
+
+            // Maybe works
+            //for (int i = 0; i < Data.gameObjects.Count; i++)
+            //{
+            //    if (Data.gameObjects[i] is Gem g)
+            //    {
+            //        if (Data.InBounds((int)g.position.X / Data.tileSize, (int)g.position.Y / Data.tileSize) && 
+            //            Data.tileMap[(int)g.position.X / Data.tileSize, (int)g.position.Y / Data.tileSize].gem == null)
+            //        {
+            //            if (Data.InBounds((int)g.position.X / Data.tileSize, (int)g.position.Y / Data.tileSize + 1) &&
+            //                Data.tileMap[(int)g.position.X / Data.tileSize, (int)g.position.Y / Data.tileSize - 1].gem != null)
+            //            {
+            //                Data.tileMap[(int)g.position.X / Data.tileSize, (int)g.position.Y / Data.tileSize] = new Tile();
+            //                Data.gameObjects[i].isRemoved = true;
+            //            }
+            //        }
+            //        else return;
+            //    }
+            //}
+        }
+        public static void SpawnNewGems()
+        {
+            // Spawn gems at rows where there was a clear
         }
 
         public static void CheckForMatches()
