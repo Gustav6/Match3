@@ -17,7 +17,7 @@ namespace Match3
 
         public static void LoadTextures(ContentManager content, GraphicsDevice graphicsDevice)
         {
-            textures = new Texture2D[Enum.GetNames<Data.gemType>().Length];
+            textures = new Texture2D[Enum.GetNames<gemType>().Length];
 
             tileTexture = new Texture2D(graphicsDevice, Data.tileSize, Data.tileSize);
             Color[] colorArray = new Color[Data.tileSize * Data.tileSize];
@@ -30,11 +30,11 @@ namespace Match3
             boundingBoxTexture = new Texture2D(graphicsDevice, 1, 1);
             boundingBoxTexture.SetData<Color>(new Color[] { Color.Green * 0.8f });
 
-            textures[(int)Data.gemType.blueGemTexture] = (content.Load<Texture2D>("gemBlue"));
-            textures[(int)Data.gemType.greenGemTexture] = content.Load<Texture2D>("gemGreen");
-            textures[(int)Data.gemType.purpleGemTexture] = content.Load<Texture2D>("gemPurple");
-            textures[(int)Data.gemType.redGemTexture] = content.Load<Texture2D>("gemRed");
-            textures[(int)Data.gemType.yellowgemTexture] = content.Load<Texture2D>("gemYellow");
+            textures[(int)gemType.blueGemTexture] = (content.Load<Texture2D>("gemBlue"));
+            textures[(int)gemType.greenGemTexture] = content.Load<Texture2D>("gemGreen");
+            textures[(int)gemType.purpleGemTexture] = content.Load<Texture2D>("gemPurple");
+            textures[(int)gemType.redGemTexture] = content.Load<Texture2D>("gemRed");
+            textures[(int)gemType.yellowgemTexture] = content.Load<Texture2D>("gemYellow");
         }
     }
 }

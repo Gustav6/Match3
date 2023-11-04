@@ -11,5 +11,6 @@ namespace Match3
     {
         public bool canHaveGem;
         public Gem gem;
+        public Point position;
     }
 }

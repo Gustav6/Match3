@@ -39,9 +39,15 @@ namespace Match3
 
             // To update every gem in the tilemap
             for (int x = 0; x < Data.tileMap.GetLength(0); x++)
+            {
                 for (int y = 0; y < Data.tileMap.GetLength(1); y++)
+                {
                     if (Data.tileMap[x, y].gem != null)
+                    {
                         Data.tileMap[x, y].gem.Update(gameTime);
+                    }
+                }
+            }
 
             GameManger.Update(gameTime);
 
@@ -61,7 +67,9 @@ namespace Match3
                 {
                     if (Data.tileMap[x, y].gem != null)
                     {
-                        _spriteBatch.Draw(Data.tileMap[x, y].gem.texutre, new Vector2(Data.tileMap[x , y].gem.position.X, Data.tileMap[x, y].gem.position.Y), Data.tileMap[x, y].gem.color);
+                        Data.tileMap[x, y].gem.Draw(_spriteBatch);
+
+                        //_spriteBatch.Draw(Data.tileMap[x, y].gem.texutre, new Vector2(Data.tileMap[x , y].gem.position.X, Data.tileMap[x, y].gem.position.Y), Data.tileMap[x, y].gem.color);
                     }
                 }
             }

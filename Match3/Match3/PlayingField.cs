@@ -7,6 +7,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Match3
@@ -18,17 +19,17 @@ namespace Match3
 
         public static void Update()
         {
+            ChangeGemAfterMove();
             MoveGem();
-            CheckForMatches();
-            MoveGems();
-            SpawnNewGems();
         }
 
         public static void MoveGem()
         {
             // Input
             if (InputManager.MouseHasBeenPressed(InputManager.currentMS.LeftButton, InputManager.prevMS.LeftButton))
+            {
                 GetSelectedGem();
+            }
 
             if (prevGem != null && currentGem != null && prevGem != currentGem)
             {
@@ -55,24 +56,26 @@ namespace Match3
                     // Switch the gems positions
                     Data.tileMap[prevPosX, prevPosY].gem.texutre = newCurrentPos;
                     Data.tileMap[currnetPosX, currnetPosY].gem.texutre = newPrevPos;
-
+                        
                     // Reset visual selection change after gems w
                     VisualChange(currnetPosX, currnetPosY, 1);
                     VisualChange(prevPosX, prevPosY, 1);
 
+                    CheckForMatches();
+
                     // Check if the new position makes a match if not change them back
-                    List<Point> tempCheck = new List<Point>();
+                    //List<Point> tempCheck = new List<Point>();
 
-                    tempCheck.AddRange(CheckVertical());
-                    tempCheck.AddRange(CheckHorizontal());
+                    //tempCheck.AddRange(CheckVertical());
+                    //tempCheck.AddRange(CheckHorizontal());
 
-                    if (tempCheck.Count == 0)
-                    {
-                        Data.tileMap[prevPosX, prevPosY].gem.texutre = newCurrentPos;
-                        Data.tileMap[currnetPosX, currnetPosY].gem.texutre = newPrevPos;
-                    }
+                    //if (tempCheck.Count == 0)
+                    //{
+                    //    Data.tileMap[prevPosX, prevPosY].gem.texutre = newCurrentPos;
+                    //    Data.tileMap[currnetPosX, currnetPosY].gem.texutre = newPrevPos;
+                    //}
 
-                    tempCheck.Clear();
+                    //tempCheck.Clear();
                 }
                 else
                 {
@@ -86,32 +89,38 @@ namespace Match3
                 prevGem = null;
             }
             else if (currentGem != null)
+            {
                 prevGem = currentGem;
+            }
         }
 
         public static void GetSelectedGem()
         {
-            int mouseX = (int)(InputManager.currentMS.X / Data.tileSize);
-            int mouseY = (int)(InputManager.currentMS.Y / Data.tileSize);
-
-            if (0 <= mouseX && mouseX < Data.tileMap.GetLength(0))
-                if (0 <= mouseY && mouseY < Data.tileMap.GetLength(1))
-                    if (Data.tileMap[mouseX, mouseY].gem != null)
+            for (int x = 0; x < Data.tileMap.GetLength(0); x++)
+            {
+                for (int y = 0; y < Data.tileMap.GetLength(1); y++)
+                {
+                    if (Data.tileMap[x, y].gem != null)
                     {
-                        currentGem = new Point(mouseX, mouseY);
-
-                        // Make a visual change when selecting object
-                        VisualChange(currentGem.Value.X, currentGem.Value.Y, 0.7f);
-
-                        // Revert change if you press same object and or invalid target
-                        if (prevGem != null && Data.tileMap[currentGem.Value.X, currentGem.Value.Y].gem == Data.tileMap[prevGem.Value.X, prevGem.Value.Y].gem)
+                        if (InputManager.GetMouseBounds(true).Intersects(Data.tileMap[x, y].gem.boundingBox))
                         {
-                            VisualChange(currentGem.Value.X, currentGem.Value.Y, 1);
-                            // Resets variables because there was no change
-                            prevGem = null;
-                            currentGem = null;
+                            currentGem = new Point(x, y);
+
+                            // Make a visual change when selecting object
+                            VisualChange(currentGem.Value.X, currentGem.Value.Y, 0.7f);
+
+                            // Revert change if you press same object and or invalid target
+                            if (prevGem != null && Data.tileMap[currentGem.Value.X, currentGem.Value.Y].gem == Data.tileMap[prevGem.Value.X, prevGem.Value.Y].gem)
+                            {
+                                VisualChange(currentGem.Value.X, currentGem.Value.Y, 1);
+                                // Resets variables because there was no change
+                                prevGem = null;
+                                currentGem = null;
+                            }
                         }
                     }
+                }
+            }
         }
 
         public static void VisualChange(int positionX, int positionY, float newAlpha)
@@ -119,41 +128,74 @@ namespace Match3
             Data.tileMap[positionX, positionY].gem.color = Color.White * newAlpha;
         }
 
-        public static void MoveGems()
+        public static void ChangeGemAfterMove()
         {
-            // Move all gems that has empty gem under
+            for (int i = 0; i < Data.gameObjects.Count; i++)
+            {
+                if (Data.gameObjects[i] is Gem g)
+                {
+                    if ((int)(g.position.Y / Data.tileSize) == Data.tileMap.GetLength(1) - 1 || Data.tileMap[(int)(g.position.X / Data.tileSize), (int)(g.position.Y / Data.tileSize) + 1].gem != null)
+                    {
+                        // Make position exakt on the tile, and add check if the gem under the can't have gem is empty.
+
+                        Tile temp = new Tile() { gem = new Gem(new Vector2((int)g.position.X, (int)g.position.Y), g.gemType), canHaveGem = true };
+                        Data.tileMap[(int)(g.position.X / Data.tileSize), (int)(g.position.Y / Data.tileSize)] = temp;
+                        Data.gameObjects.RemoveAt(i);
+                    }
+                }
+            }
+        }
+
+        public static void MoveGemsDown()
+        {
+            List<Point> emptyRow = RowWithMissingGem();
+
+            if (emptyRow.Count != 0)
+            {
+                for (int i = 0; i < emptyRow.Count; i++)
+                {
+                    for (int y = Data.tileMap.GetLength(1) - 1; y >= 0; y--)
+                    {
+                        if (Data.tileMap[emptyRow[i].X, y].gem != null && y < emptyRow[i].Y)
+                        {
+                            Data.gameObjects.Add(new Gem(new Vector2(emptyRow[i].X, y) * Data.tileSize, Data.tileMap[emptyRow[i].X, y].gem.gemType));
+                            Data.tileMap[emptyRow[i].X, y].gem = null;
+
+                            //Data.tileMap[MissingGem()[i].X, y].gem.color = Color.Red;
+                            //Data.tileMap[MissingGem()[i].X, y].gem.Direction(direction.down);
+                        }
+                    }
+                }
+            }
+
+            for (int i = 0; i < Data.gameObjects.Count; i++)
+            {
+                if (Data.gameObjects[i] is Gem g)
+                {
+                    g.Direction(direction.down);
+                }
+            }
+        }
+
+        public static List<Point> RowWithMissingGem()
+        {
+            List<Point> firstEmptyPos = new List<Point>();
 
             for (int x = 0; x < Data.tileMap.GetLength(0); x++)
             {
                 for (int y = Data.tileMap.GetLength(1) - 1; y >= 0; y--)
                 {
-                    if (Data.InBounds(x, y - 1) && Data.tileMap[x, y].canHaveGem && Data.tileMap[x, y - 1].gem != null && Data.tileMap[x, y].gem == null)
+                    if (Data.tileMap[x, y].canHaveGem && Data.tileMap[x, y].gem == null)
                     {
-                        //Data.gameObjects.Add(new Gem(new Vector2(x * Data.tileSize + Data.tileSize, y * Data.tileSize), Data.tileMap[x, y - 1].gem.gemType, 100));
-                        //Data.tileMap[x, y - 1].gem = null;
+                        firstEmptyPos.Add(new Point(x, y));
+                        break;
                     }
                 }
             }
 
-            // Maybe works
-            //for (int i = 0; i < Data.gameObjects.Count; i++)
-            //{
-            //    if (Data.gameObjects[i] is Gem g)
-            //    {
-            //        if (Data.InBounds((int)g.position.X / Data.tileSize, (int)g.position.Y / Data.tileSize) && 
-            //            Data.tileMap[(int)g.position.X / Data.tileSize, (int)g.position.Y / Data.tileSize].gem == null)
-            //        {
-            //            if (Data.InBounds((int)g.position.X / Data.tileSize, (int)g.position.Y / Data.tileSize + 1) &&
-            //                Data.tileMap[(int)g.position.X / Data.tileSize, (int)g.position.Y / Data.tileSize - 1].gem != null)
-            //            {
-            //                Data.tileMap[(int)g.position.X / Data.tileSize, (int)g.position.Y / Data.tileSize] = new Tile();
-            //                Data.gameObjects[i].isRemoved = true;
-            //            }
-            //        }
-            //        else return;
-            //    }
-            //}
+            return firstEmptyPos;
         }
+
         public static void SpawnNewGems()
         {
             // Spawn gems at rows where there was a clear
@@ -161,76 +203,128 @@ namespace Match3
 
         public static void CheckForMatches()
         {
-            List<Point> temp = new List<Point>();
-            temp.AddRange(CheckVertical());
-            temp.AddRange(CheckHorizontal());
+            List<Point[]> verticalMatches = CheckVertical();
+            List<Point[]> horizontalMatches = CheckHorizontal();
 
-            if (temp.Count != 0)
-                RemoveGems(temp);
+            foreach (Point[] points in horizontalMatches)
+            {
+                foreach (Point point in points)
+                {
+                    Data.tileMap[point.X, point.Y].gem = null;
+
+                    // Debug
+                    //if (Data.tileMap[point.X, point.Y].gem != null)
+                    //{
+                    //    Data.tileMap[point.X, point.Y].gem.color = Color.Red;
+                    //}
+                }
+            }
+            foreach (Point[] points in verticalMatches)
+            {
+                foreach (Point point in points)
+                {
+                    Data.tileMap[point.X, point.Y].gem = null;
+
+                    // Debug
+                    //if (Data.tileMap[point.X, point.Y].gem != null)
+                    //{
+                    //    Data.tileMap[point.X, point.Y].gem.color = Color.Red;
+                    //}
+                }
+            }
+
+            SpawnNewGems();
+            MoveGemsDown();
         }
 
-        public static List<Point> CheckVertical()
+        public static List<Point[]> CheckVertical()
         {
-            Texture2D currentGem;
-            List<Point> tempVertical = new List<Point>();
+            Gem currentGem = null;
+            List<Point[]> totalMatches = new List<Point[]>();
+            List<Point> tempMatches = new List<Point>();
 
             for (int x = 0; x < Data.tileMap.GetLength(0); x++)
-                for (int y = 0; y < Data.tileMap.GetLength(1); y++)
-                    if (Data.tileMap[x, y].gem != null)
+            {
+                if (tempMatches.Count >= 3)
+                {
+                    totalMatches.Add(tempMatches.ToArray());
+                }
+
+                tempMatches.Clear();
+
+                for (int y = 0; y < Data.tileMap.GetLength(0); y++)
+                {
+                    if (currentGem != null && Data.tileMap[x, y].gem != null && currentGem.texutre == Data.tileMap[x, y].gem.texutre && currentGem.position.X == Data.tileMap[x, y].gem.position.X)
                     {
-                        currentGem = Data.tileMap[x, y].gem.texutre;
-
-                        if (Data.InBounds(x, y - 1) && Data.tileMap[x, y - 1].gem != null && currentGem == Data.tileMap[x, y - 1].gem.texutre)
-                        {
-                            tempVertical.Add(new Point(x, y));
-                        }
-                        else if (tempVertical.Count >= 3)
-                        {
-                            return tempVertical;
-                        }
-                        else
-                        {
-                            tempVertical.Clear();
-                            tempVertical.Add(new Point(x, y));
-                        }
+                        tempMatches.Add(new Point(x, y));
                     }
+                    else if (tempMatches.Count >= 3)
+                    {
+                        totalMatches.Add(tempMatches.ToArray());
+                        tempMatches.Clear();
+                    }
+                    else
+                    {
+                        tempMatches.Clear();
+                        if (Data.tileMap[x, y].gem != null)
+                        {
+                            currentGem = Data.tileMap[x, y].gem;
+                        }
+                        else if (!Data.tileMap[x, y].canHaveGem)
+                        {
+                            currentGem = null;
+                        }
+                        tempMatches.Add(new Point(x, y));
+                    }
+                }
+            }
 
-            return new List<Point>();
+            return totalMatches;
         }
 
-        public static List<Point> CheckHorizontal()
+        public static List<Point[]> CheckHorizontal()
         {
-            Texture2D currentGem;
-            List<Point> tempHotizontal = new List<Point>();
+            Gem currentGem = null;
+            List<Point[]> totalMatches = new List<Point[]>();
+            List<Point> tempMatches = new List<Point>();
 
-            for (int y = 0; y < Data.tileMap.GetLength(1); y++)
+            for (int y = 0; y < Data.tileMap.GetLength(0); y++)
+            {
+                if (tempMatches.Count >= 3)
+                {
+                    totalMatches.Add(tempMatches.ToArray());
+                }
+
+                tempMatches.Clear();
+
                 for (int x = 0; x < Data.tileMap.GetLength(0); x++)
-                    if (Data.tileMap[x, y].gem != null)
+                {
+                    if (currentGem != null && Data.tileMap[x, y].gem != null && currentGem.texutre == Data.tileMap[x, y].gem.texutre && currentGem.position.Y == Data.tileMap[x, y].gem.position.Y)
                     {
-                        currentGem = Data.tileMap[x, y].gem.texutre;
-
-                        if (Data.InBounds(x - 1, y) && Data.tileMap[x - 1, y].gem != null && currentGem == Data.tileMap[x - 1, y].gem.texutre)
-                        {
-                            tempHotizontal.Add(new Point(x, y));
-                        }
-                        else if (tempHotizontal.Count >= 3)
-                        {
-                            return tempHotizontal;
-                        }
-                        else
-                        {
-                            tempHotizontal.Clear();
-                            tempHotizontal.Add(new Point(x, y));
-                        }
+                        tempMatches.Add(new Point(x, y));
                     }
+                    else if (tempMatches.Count >= 3)
+                    {
+                        totalMatches.Add(tempMatches.ToArray());
+                        tempMatches.Clear();
+                    }
+                    else
+                    {
+                        tempMatches.Clear();
+                        if (Data.tileMap[x, y].gem != null)
+                        {
+                            currentGem = Data.tileMap[x, y].gem;
+                        }
+                        else if (!Data.tileMap[x, y].canHaveGem)
+                        {
+                            currentGem = null;
+                        }
+                        tempMatches.Add(new Point(x, y));
+                    }
+                }
+            }
 
-            return new List<Point>();
-        }
-
-        private static void RemoveGems(List<Point> gemPos)
-        {
-            for (int i = 0; i < gemPos.Count; i++)
-                Data.tileMap[gemPos[i].X, gemPos[i].Y].gem = null;
+            return totalMatches;
         }
     }
 }

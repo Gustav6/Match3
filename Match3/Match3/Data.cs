@@ -29,13 +29,23 @@ namespace Match3
             return 0 <= y && y < Data.tileMap.GetLength(1) && 0 <= x && x < Data.tileMap.GetLength(0);
         }
 
-        public enum gemType
-        {
-            blueGemTexture,
-            redGemTexture,
-            greenGemTexture,
-            purpleGemTexture,
-            yellowgemTexture
-        }
+    }
+
+    public enum gemType
+    {
+        blueGemTexture,
+        redGemTexture,
+        greenGemTexture,
+        purpleGemTexture,
+        yellowgemTexture
+    }
+
+    public enum direction
+    {
+        up,
+        down,
+        left,
+        right,
+        none
     }
 }
