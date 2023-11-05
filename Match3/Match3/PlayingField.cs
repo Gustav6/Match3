@@ -16,6 +16,7 @@ namespace Match3
     {
         private static Point? prevGem;
         private static Point? currentGem;
+        public static int gemsLeft = 10;
 
         public static void Update()
         {
@@ -134,13 +135,22 @@ namespace Match3
             {
                 if (Data.gameObjects[i] is Gem g)
                 {
+                    g.Direction(direction.down);
+                }
+            }
+
+            for (int i = 0; i < Data.gameObjects.Count; i++)
+            {
+                if (Data.gameObjects[i] is Gem g)
+                {
                     if ((int)(g.position.Y / Data.tileSize) == Data.tileMap.GetLength(1) - 1 || Data.tileMap[(int)(g.position.X / Data.tileSize), (int)(g.position.Y / Data.tileSize) + 1].gem != null)
                     {
-                        // Make position exakt on the tile, and add check if the gem under the can't have gem is empty.
-
+                        // Make position more accurate on the tile, and add check if gem can keep moving
                         Tile temp = new Tile() { gem = new Gem(new Vector2((int)g.position.X, (int)g.position.Y), g.gemType), canHaveGem = true };
+
                         Data.tileMap[(int)(g.position.X / Data.tileSize), (int)(g.position.Y / Data.tileSize)] = temp;
                         Data.gameObjects.RemoveAt(i);
+                        CheckForMatches();
                     }
                 }
             }
@@ -167,19 +177,11 @@ namespace Match3
                     }
                 }
             }
-
-            for (int i = 0; i < Data.gameObjects.Count; i++)
-            {
-                if (Data.gameObjects[i] is Gem g)
-                {
-                    g.Direction(direction.down);
-                }
-            }
         }
 
         public static List<Point> RowWithMissingGem()
         {
-            List<Point> firstEmptyPos = new List<Point>();
+            List<Point> emptyPos = new List<Point>();
 
             for (int x = 0; x < Data.tileMap.GetLength(0); x++)
             {
@@ -187,18 +189,27 @@ namespace Match3
                 {
                     if (Data.tileMap[x, y].canHaveGem && Data.tileMap[x, y].gem == null)
                     {
-                        firstEmptyPos.Add(new Point(x, y));
-                        break;
+                        emptyPos.Add(new Point(x, y));
                     }
                 }
             }
 
-            return firstEmptyPos;
+            return emptyPos;
         }
 
         public static void SpawnNewGems()
         {
             // Spawn gems at rows where there was a clear
+            List<Point> emptyRow = RowWithMissingGem();
+
+            if (gemsLeft > 0 && emptyRow.Count != 0)
+            {
+                for (int i = 0; i < emptyRow.Count; i++)
+                {
+                    Data.gameObjects.Add(new Gem(new Vector2(emptyRow[i].X * Data.tileSize, -Data.tileSize), 0));
+                }
+                gemsLeft--;
+            }
         }
 
         public static void CheckForMatches()
