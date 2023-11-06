@@ -9,11 +9,9 @@ namespace Match3
 {
     public static class Data
     {
-        public static List<GameObject> gameObjects = new List<GameObject>();
+        public static List<GameObject> gameObjects = new();
 
         public static Tile[,] tileMap;
-        public static int gameHeight = 10;
-        public static int gameWidth = 8;
         public static int tileSize = 64;
 
         public static int bufferWidth = 1920;
@@ -21,17 +19,22 @@ namespace Match3
 
         public static int Random(int minimumValue, int maximumValue)
         {
-            Random rng = new Random();
+            Random rng = new();
             return rng.Next(minimumValue, maximumValue);
         }
+
         public static bool InBounds(int x, int y)
         {
             return 0 <= y && y < Data.tileMap.GetLength(1) && 0 <= x && x < Data.tileMap.GetLength(0);
         }
 
+        public static void Gravity(Gem gem)
+        {
+
+        }
     }
 
-    public enum gemType
+    public enum GemType
     {
         blueGemTexture,
         redGemTexture,
@@ -40,7 +43,7 @@ namespace Match3
         yellowgemTexture
     }
 
-    public enum direction
+    public enum Direction
     {
         up,
         down,

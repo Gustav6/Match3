@@ -15,8 +15,6 @@ namespace Match3
         public static MouseState currentMS;
         public static MouseState prevMS;
 
-        public static bool leftClick;
-
         public static void GetInput()
         {
             GetState();

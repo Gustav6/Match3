@@ -20,11 +20,11 @@ namespace Match3
             texutre = TextureManager.textures[_gemType];
             gemType = _gemType;
             color = Color.White;
-            moveSpeed = 200;
+            moveSpeed = 1000;
             scale = new Vector2(1, 1);
 
             boundingBox = new Rectangle((int)position.X, (int)position.Y, texutre.Width, texutre.Height);
-            SetSourceRectangle(TextureManager.textures[0]);
+            SetSource(TextureManager.textures[0]);
         }
 
         public override void Update(GameTime gameTime)
@@ -33,41 +33,30 @@ namespace Match3
             boundingBox.Location = position.ToPoint();
         }
 
-        public bool CanMoveDown(int x, int y)
+        public static void SwapSpeed()
         {
-            if (Data.tileMap[x, y + 1 + checkUnder].gem != null && Data.tileMap[x, y + 1 + checkUnder].canHaveGem && Data.tileMap[x, y + 1 + checkUnder].gem.velociy != Vector2.Zero)
-            {
-                //Data.tileMap[MissingGem()[i].X, y].gem.Direction(direction.none);
-                checkUnder = 0;
-                return false;
-            }
-            else if (Data.tileMap[x, y].gem.position.Y >= Data.tileMap[x, y + 1 + checkUnder].position.Y)
-            {
-                checkUnder += 1;
-            }
 
-            return true;
         }
 
-        public void Direction(direction dir)
+        public void Direction(Direction dir)
         {
-            if (dir == direction.up)
+            if (dir == Match3.Direction.up)
             {
                 velociy = new Vector2(0, -1);
             }
-            else if(dir == direction.down)
+            else if(dir == Match3.Direction.down)
             {
                 velociy = new Vector2(0, 1);
             }
-            else if(dir == direction.left)
+            else if(dir == Match3.Direction.left)
             {
                 velociy = new Vector2(-1, 0);
             }
-            else if (dir == direction.right)
+            else if (dir == Match3.Direction.right)
             {
                 velociy = new Vector2(1, 0);
             }
-            else if (dir == direction.none)
+            else if (dir == Match3.Direction.none)
             {
                 velociy = Vector2.Zero;
             }

@@ -24,12 +24,12 @@ namespace Match3
 
         }
 
-        public void SetSourceRectangle(Texture2D _texture)
+        public void SetSource(Texture2D _texture)
         {
             soureceRectangle = new Rectangle(0, 0, _texture.Width, _texture.Height);
         }
 
-        public void Destroy(GameObject gameObject)
+        public static void Destroy(GameObject gameObject)
         {
             gameObject.isRemoved = true;
         }

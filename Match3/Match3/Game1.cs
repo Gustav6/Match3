@@ -11,9 +11,11 @@ namespace Match3
 
         public Game1()
         {
-            _graphics = new GraphicsDeviceManager(this);
-            _graphics.PreferredBackBufferHeight = Data.bufferHeight;
-            _graphics.PreferredBackBufferWidth = Data.bufferWidth;
+            _graphics = new GraphicsDeviceManager(this)
+            {
+                PreferredBackBufferHeight = Data.bufferHeight,
+                PreferredBackBufferWidth = Data.bufferWidth
+            };
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
         }
@@ -37,18 +39,7 @@ namespace Match3
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            // To update every gem in the tilemap
-            for (int x = 0; x < Data.tileMap.GetLength(0); x++)
-            {
-                for (int y = 0; y < Data.tileMap.GetLength(1); y++)
-                {
-                    if (Data.tileMap[x, y].gem != null)
-                    {
-                        Data.tileMap[x, y].gem.Update(gameTime);
-                    }
-                }
-            }
-
+            InputManager.GetInput();
             GameManger.Update(gameTime);
 
             base.Update(gameTime);
@@ -65,12 +56,7 @@ namespace Match3
             {
                 for (int y = 0; y < Data.tileMap.GetLength(1); y++)
                 {
-                    if (Data.tileMap[x, y].gem != null)
-                    {
-                        Data.tileMap[x, y].gem.Draw(_spriteBatch);
-
-                        //_spriteBatch.Draw(Data.tileMap[x, y].gem.texutre, new Vector2(Data.tileMap[x , y].gem.position.X, Data.tileMap[x, y].gem.position.Y), Data.tileMap[x, y].gem.color);
-                    }
+                    Data.tileMap[x, y].gem?.Draw(_spriteBatch);
                 }
             }
 

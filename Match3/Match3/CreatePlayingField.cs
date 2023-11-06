@@ -49,7 +49,7 @@ namespace Match3
 
         private static void CreateTempMap()
         {
-            // Create a map that shows where gems can be (0 = cant, 1 = can)
+            // Create a map that shows what tiles can hold gems (0 = cant, 1 = can)
             int[,] tempMap = new int[,]
             {
                 {0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0},
