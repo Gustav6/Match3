@@ -11,6 +11,7 @@ namespace Match3
     public class PlayingFieldAction
     {
         private static int gemsLeft = 50;
+        private static Point? gemDestination;
 
         public static void CheckIfGemCanMove()
         {
@@ -31,22 +32,76 @@ namespace Match3
                     }
                 }
             }
+
+            //for (int i = 0; i < Data.gameObjects.Count; i++)
+            //{
+            //    if (Data.gameObjects[i] is Gem g)
+            //    {
+            //        if (g.position.ToPoint().Y >= g.destination.Value.Y)
+            //        {
+            //            return;
+            //        }
+            //    }
+            //}
+        }
+
+        public static void MarkDestination()
+        {
+            bool gemMissing = false;
+            int? currentYLevel = null;
+            List<Point> des = new();
+
+            for (int x = 0; x < Data.tileMap.GetLength(0); x++)
+            {
+                for (int y = Data.tileMap.GetLength(1) - 1; y >= 0; y--)
+                {
+                    if (Data.tileMap[x, y].canHaveGem && Data.tileMap[x, y].gem == null)
+                    {
+                        gemMissing = true;
+                        currentYLevel = y;
+                        break;
+                    }
+                }
+
+                if (gemMissing && currentYLevel != null)
+                {
+                    for (int y = (int)currentYLevel; y >= 0; y--)
+                    {
+                        des.Add(new Point(x, y));
+                    }
+                    gemMissing = false;
+                }
+            }
+
+            for (int i = 0; i < des.Count; i++)
+            {
+                if (Data.tileMap[des[i].X, des[i].Y].gem != null)
+                {
+                    Gem temp = new Gem(Data.tileMap[des[i].X, des[i].Y].position.ToVector2() * 64, Data.tileMap[des[i].X, des[i].Y].gem.gemType);
+                    temp.destination = new Point(des[i].X, des[0].Y);
+                    temp.Direction(Direction.down);
+
+                    Data.gameObjects.Add(temp);
+                    i++;
+                    des.RemoveAt(0);
+                }
+            }
         }
 
         public static void MoveGemsDown()
         {
-            List<Point> emptyRow = WhichGemCanMove();
+            List<Point> canMove = WhichGemCanMove();
 
-            for (int i = 0; i < emptyRow.Count; i++)
+            for (int i = 0; i < canMove.Count; i++)
             {
                 for (int y = Data.tileMap.GetLength(1) - 1; y >= 0; y--)
                 {
-                    if (Data.tileMap[emptyRow[i].X, y].gem != null && y < emptyRow[i].Y)
+                    if (Data.tileMap[canMove[i].X, y].gem != null && y < canMove[i].Y)
                     {
-                        Gem temp = (new Gem(new Vector2(emptyRow[i].X, y) * Data.tileSize, Data.tileMap[emptyRow[i].X, y].gem.gemType));
+                        Gem temp = (new Gem(new Vector2(canMove[i].X, y) * Data.tileSize, Data.tileMap[canMove[i].X, y].gem.gemType));
                         temp.Direction(Direction.down);
                         Data.gameObjects.Add(temp);
-                        Data.tileMap[emptyRow[i].X, y].gem = null;
+                        Data.tileMap[canMove[i].X, y].gem = null;
                     }
                 }
             }
@@ -105,7 +160,8 @@ namespace Match3
             }
 
             //PlayingFieldActions.SpawnNewGems();
-            PlayingFieldAction.MoveGemsDown();
+            //PlayingFieldAction.MoveGemsDown();
+            MoveGemsDown();
         }
 
         public static List<Point[]> CheckVertical()

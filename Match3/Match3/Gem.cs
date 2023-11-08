@@ -13,6 +13,7 @@ namespace Match3
         public Rectangle boundingBox;
         public int gemType;
         public int checkUnder;
+        public Point? destination;
 
         public Gem(Vector2 startPosition, int _gemType)
         {
@@ -32,6 +33,15 @@ namespace Match3
             base.Update(gameTime);
             boundingBox.Location = position.ToPoint();
         }
+
+        //public Point? Destination(Point? destination)
+        //{
+        //    if (destination != null)
+        //    {
+        //        return destination;
+        //    }
+        //    return null;
+        //}
 
         public static void SwapSpeed()
         {
