@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Microsoft.VisualBasic;
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,11 +8,13 @@ using System.Threading.Tasks;
 
 namespace Match3
 {
-    public static class GameManger
+    public class GameManger
     {
-        public static void Update(GameTime gameTime)
+        readonly PlayingFieldInteraction interaction = new();
+
+        public void Update(GameTime gameTime)
         {
-            PlayingField.Update();
+            PlayingField();
             UpdateLoop(gameTime);
             RemoveLoop();
         }
@@ -32,7 +35,12 @@ namespace Match3
                     Data.tileMap[x, y].gem?.Update(gameTime);
                 }
             }
+        }
 
+        public void PlayingField()
+        {
+            PlayingFieldAction.CheckIfGemCanMove();
+            interaction.MoveSelectedGem();
         }
 
         private static void RemoveLoop()

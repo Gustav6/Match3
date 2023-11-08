@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace Match3
 {
-    public static class CreatePlayingField
+    public class CreatePlayingField
     {
-        public static void FinalizedPlayingField()
+        public static void CreateNewPlayingField(int[,] map)
         {
-            CreateTempMap();
+            CreateTileMap(map);
             SpawnGems();
         }
 
@@ -47,28 +47,7 @@ namespace Match3
             }
         }
 
-        private static void CreateTempMap()
-        {
-            // Create a map that shows what tiles can hold gems (0 = cant, 1 = can)
-            int[,] tempMap = new int[,]
-            {
-                {0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0},
-                {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},
-                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-                {1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1},
-                {1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1},
-                {1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1},
-                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-                {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},
-                {0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0}
-            };
-
-            LoadTileMap(tempMap);
-        }
-
-        private static void LoadTileMap(int[,] tempMap)
+        private static void CreateTileMap(int[,] tempMap)
         {
             // Set project wide tilemap to temp with the inverse of the temp map
             Data.tileMap = new Tile[tempMap.GetLength(0), tempMap.GetLength(1)];

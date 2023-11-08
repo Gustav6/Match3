@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Microsoft.VisualBasic;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Match3
 {
-    public class PlayingFieldInteractions
+    public class PlayingFieldInteraction
     {
         private Point? prevGem;
         private Point? currentGem;
@@ -57,7 +58,7 @@ namespace Match3
                     VisualChange(currnetPosX, currnetPosY, 1);
                     VisualChange(prevPosX, prevPosY, 1);
 
-                    PlayingField.ClearMatches();
+                    PlayingFieldAction.ClearMatches();
 
                     // Check if the new position makes a match if not change them back
                     if (Data.tileMap[prevPosX, prevPosY].gem != null && Data.tileMap[currnetPosX, currnetPosY].gem != null)

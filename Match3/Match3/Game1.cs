@@ -9,6 +9,8 @@ namespace Match3
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
+        private GameManger gameManager = new();
+
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this)
@@ -24,7 +26,20 @@ namespace Match3
         {
             base.Initialize();
 
-            CreatePlayingField.FinalizedPlayingField();
+            CreatePlayingField.CreateNewPlayingField(new int[,]
+            {
+                {0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0},
+                {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},
+                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+                {1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1},
+                {1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1},
+                {1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1},
+                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+                {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},
+                {0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0}
+            });
         }
 
         protected override void LoadContent()
@@ -40,7 +55,8 @@ namespace Match3
                 Exit();
 
             InputManager.GetInput();
-            GameManger.Update(gameTime);
+
+            gameManager.Update(gameTime);
 
             base.Update(gameTime);
         }
