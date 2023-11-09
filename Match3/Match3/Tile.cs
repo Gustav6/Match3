@@ -9,6 +9,7 @@ namespace Match3
 {
     public struct Tile
     {
+        public bool isFilled;
         public bool canHaveGem;
         public Point position;
         public Gem gem;

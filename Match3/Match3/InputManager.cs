@@ -17,11 +17,11 @@ namespace Match3
 
         public static void GetInput()
         {
-            GetState();
+            GetKeyboardState();
             GetMouseState();
         }
 
-        private static KeyboardState GetState()
+        private static KeyboardState GetKeyboardState()
         {
             prevKS = currentKS;
             currentKS = Keyboard.GetState();
