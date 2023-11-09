@@ -61,11 +61,11 @@ namespace Match3
                     PlayingFieldAction.ClearMatches();
 
                     // Check if the new position makes a match if not change them back
-                    if (Data.tileMap[prevPosX, prevPosY].gem != null && Data.tileMap[currnetPosX, currnetPosY].gem != null)
-                    {
-                        Data.tileMap[prevPosX, prevPosY].gem.texutre = newPrevPos;
-                        Data.tileMap[currnetPosX, currnetPosY].gem.texutre = newCurrentPos;
-                    }
+                    //if (Data.tileMap[prevPosX, prevPosY].gem != null && Data.tileMap[currnetPosX, currnetPosY].gem != null)
+                    //{
+                    //    Data.tileMap[prevPosX, prevPosY].gem.texutre = newPrevPos;
+                    //    Data.tileMap[currnetPosX, currnetPosY].gem.texutre = newCurrentPos;
+                    //}
                 }
                 else
                 {
