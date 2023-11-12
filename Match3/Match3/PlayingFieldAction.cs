@@ -12,8 +12,8 @@ namespace Match3
     public class PlayingFieldAction
     {
         private static int gemsLeft = 50;
-        private static bool gemCanMove;
-        public static bool[,] taken = new bool[Data.tileMap.GetLength(0), Data.tileMap.GetLength(1)];
+        private static bool gemIsMissing;
+        private static int amountOfGemsAdded;
 
         // Try
         // Changing the way i move gems: Do this by switching the refrence in the tile map but not the gems position.
@@ -85,13 +85,14 @@ namespace Match3
             }
 
             MoveGemsDown();
+            SpawnNewGems();
         }
 
         public static void MoveGemsDown()
         {
             CanGemMove();
 
-            if (gemCanMove)
+            if (gemIsMissing)
             {
                 DeclearDestination();
 
@@ -109,8 +110,6 @@ namespace Match3
                     }
                 }
             }
-
-            //SpawnNewGems();
         }
 
         private static void CanGemMove()
@@ -123,7 +122,7 @@ namespace Match3
                 {
                     if (Data.tileMap[x, y].canHaveGem && Data.tileMap[x, y].gem == null && !Data.tileMap[x, y].isFilled)
                     {
-                        gemCanMove = true;
+                        gemIsMissing = true;
                         rowThatCanMove.Add(new Point(x, y));
                         break;
                     }
@@ -149,36 +148,46 @@ namespace Match3
 
             if (rowThatCanMove.Count == 0)
             {
-                gemCanMove = false;
+                gemIsMissing = false;
             }
         }
 
         public static void SpawnNewGems()
         {
             // Spawn gems at rows where there was a clear
-            List<Point> emptySlot = new();
 
-            for (int x = 0; x < Data.tileMap.GetLength(0); x++)
+            if (gemsLeft > 0 && gemIsMissing)
             {
-                for (int y = Data.tileMap.GetLength(1) - 1; y >= 0; y--)
+                List<Point> emptySlot = new();
+
+                for (int x = 0; x < Data.tileMap.GetLength(0); x++)
                 {
-                    if (Data.tileMap[x, y].canHaveGem && Data.tileMap[x, y].gem == null)
-                    {
-                        emptySlot.Add(new Point(x, y));
-                    }
-                }
-            }
+                    amountOfGemsAdded = 1;
 
-            for (int i = 0; i < emptySlot.Count; i++)
-            {
-                //Data.tileMap[emptySlot[i].X, emptySlot[i].Y].isFilled = true;
-                //Gem temp = new Gem(new(emptySlot[i].X, emptySlot[i].Y), Data.Random(0, TextureManager.textures.Length));
-                //temp.position *= Data.tileSize;
-                //temp.Direction(Direction.down);
-                //temp.destination = new Point(emptySlot[i].X, emptySlot[i].Y);
-                //Data.gameObjects.Add(temp);
-                //Data.tileMap[emptySlot[i].X, emptySlot[i].Y].gem = new Gem(emptySlot[i].ToVector2() * Data.tileSize, Data.Random(0, TextureManager.textures.Length));
-                //emptySlot.RemoveAt(i);
+                    for (int y = Data.tileMap.GetLength(1) - 1; y >= 0; y--)
+                    {
+                        if (Data.tileMap[x, y].canHaveGem && Data.tileMap[x, y].gem == null)
+                        {
+                            emptySlot.Add(new Point(x, y));
+                        }
+                    }
+
+                    if (emptySlot.Count != 0)
+                    {
+                        for (int i = emptySlot.Count - 1; i >= 0; i--)
+                        {
+                            Gem temp = new(new(x * Data.tileSize, -amountOfGemsAdded * Data.tileSize), Data.Random(0, TextureManager.textures.Length));
+                            temp.destination = new Point(x, emptySlot[i].Y);
+                            temp.Direction(Direction.down);
+                            Data.tileMap[x, emptySlot[i].Y].gem = temp;
+                            emptySlot.RemoveAt(i);
+                            amountOfGemsAdded++;
+                            gemsLeft--;
+                        }
+                    }
+
+                    // reset amount of gems added
+                }
             }
         }
 
