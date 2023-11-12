@@ -8,6 +8,8 @@ namespace Match3
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
+        private bool debugF;
+        private bool debugT;
 
         private GameManger gameManager = new();
 
@@ -56,6 +58,15 @@ namespace Match3
 
             InputManager.GetInput();
 
+            if (InputManager.HasBeenPressed(Keys.Q))
+            {
+                debugF = !debugF;
+            }
+            if (InputManager.HasBeenPressed(Keys.W))
+            {
+                debugT = !debugT;
+            }
+
             gameManager.Update(gameTime);
 
             base.Update(gameTime);
@@ -72,7 +83,31 @@ namespace Match3
             {
                 for (int y = 0; y < Data.tileMap.GetLength(1); y++)
                 {
+                    _spriteBatch.Draw(TextureManager.tileTexture, new Vector2(x * Data.tileSize, y * Data.tileSize), Data.tileMap[x, y].canHaveGem ? Color.White * 0.2f : Color.Blue * 0.2f);
+                }
+            }
+
+            for (int x = 0; x < Data.tileMap.GetLength(0); x++)
+            {
+                for (int y = 0; y < Data.tileMap.GetLength(1); y++)
+                {
                     Data.tileMap[x, y].gem?.Draw(_spriteBatch);
+                }
+            }
+
+            for (int x = 0; x < Data.tileMap.GetLength(0); x++)
+            {
+                for (int y = 0; y < Data.tileMap.GetLength(1); y++)
+                {
+                    if (debugF)
+                    {
+                        _spriteBatch.Draw(TextureManager.tileTexture, new Vector2(x * Data.tileSize, y * Data.tileSize), Data.tileMap[x, y].isFilled ? Color.Black : Color.White);
+                    }
+                    else if (debugT)
+                    {
+                        _spriteBatch.Draw(TextureManager.tileTexture, new Vector2(x * Data.tileSize, y * Data.tileSize), PlayingFieldAction.taken[x, y] ? Color.White : Color.Purple);
+
+                    }
                 }
             }
 

@@ -21,7 +21,7 @@ namespace Match3
             texutre = TextureManager.textures[_gemType];
             gemType = _gemType;
             color = Color.White;
-            moveSpeed = 100;
+            moveSpeed = 50;
             scale = new Vector2(1, 1);
 
             boundingBox = new Rectangle((int)position.X, (int)position.Y, texutre.Width, texutre.Height);
@@ -34,14 +34,11 @@ namespace Match3
             boundingBox.Location = position.ToPoint();
         }
 
-        //public Point? Destination(Point? destination)
-        //{
-        //    if (destination != null)
-        //    {
-        //        return destination;
-        //    }
-        //    return null;
-        //}
+        public void GemTexture(int _gemType)
+        {
+            texutre = TextureManager.textures[_gemType];
+            gemType = _gemType;
+        }
 
         public static void SwapSpeed()
         {

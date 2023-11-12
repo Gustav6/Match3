@@ -47,12 +47,12 @@ namespace Match3
                     //GemChange(prevGem, currentGem);
                     
                     // Saved gem positions
-                    Texture2D newPrevPos = Data.tileMap[prevPosX, prevPosY].gem.texutre;
-                    Texture2D newCurrentPos = Data.tileMap[currnetPosX, currnetPosY].gem.texutre;
+                    int prevGemType = Data.tileMap[prevPosX, prevPosY].gem.gemType;
+                    int currentGemType = Data.tileMap[currnetPosX, currnetPosY].gem.gemType;
 
                     // Switch the gems positions
-                    Data.tileMap[prevPosX, prevPosY].gem.texutre = newCurrentPos;
-                    Data.tileMap[currnetPosX, currnetPosY].gem.texutre = newPrevPos;
+                    Data.tileMap[prevPosX, prevPosY].gem.GemTexture(currentGemType);
+                    Data.tileMap[currnetPosX, currnetPosY].gem.GemTexture(prevGemType);
 
                     // temp change for debbug
                     VisualChange(currnetPosX, currnetPosY, 1);
@@ -116,6 +116,10 @@ namespace Match3
         public static void VisualChange(int x, int y, float newAlpha)
         {
             Data.tileMap[x, y].gem.color = Color.White * newAlpha;
+        }
+        public static void DebugChange(int x, int y, Color newColor)
+        {
+            Data.tileMap[x, y].gem.color = newColor;
         }
 
         public static void GemChange(Point? prev, Point? current)
