@@ -21,7 +21,7 @@ namespace Match3
             texutre = TextureManager.textures[_gemType];
             gemType = _gemType;
             color = Color.White;
-            moveSpeed = 50;
+            moveSpeed = 600;
             scale = new Vector2(1, 1);
 
             boundingBox = new Rectangle((int)position.X, (int)position.Y, texutre.Width, texutre.Height);

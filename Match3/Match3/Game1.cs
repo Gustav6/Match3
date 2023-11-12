@@ -105,8 +105,10 @@ namespace Match3
                     }
                     else if (debugT)
                     {
-                        _spriteBatch.Draw(TextureManager.tileTexture, new Vector2(x * Data.tileSize, y * Data.tileSize), PlayingFieldAction.taken[x, y] ? Color.White : Color.Purple);
-
+                        if (Data.tileMap[x, y].gem != null)
+                        {
+                            _spriteBatch.Draw(TextureManager.tileTexture, new Vector2(x * Data.tileSize, y * Data.tileSize), Color.Purple);
+                        }
                     }
                 }
             }

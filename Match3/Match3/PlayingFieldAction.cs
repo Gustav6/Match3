@@ -31,23 +31,24 @@ namespace Match3
 
                 for (int y = Data.tileMap.GetLength(1) - 1; y >= 0; y--)
                 {
-                    if (!Data.tileMap[x, y].isFilled && Data.tileMap[x, y].canHaveGem)
+                    if (!hasFound)
                     {
-                        if (des == null && !hasFound)
+                        if (des == null && !Data.tileMap[x, y].isFilled && Data.tileMap[x, y].canHaveGem)
                         {
-                            des = Data.tileMap[x, y].position;
-                            Data.tileMap[x, y].isFilled = true;
+                            if (Data.tileMap[x, y].gem == null)
+                            {
+                                des = Data.tileMap[x, y].position;
+                            }
                         }
                     }
 
                     if (Data.tileMap[x, y].gem != null && des != null)
                     {
-                        if (Data.tileMap[x, y].gem.destination == null)
-                        {
-                            Data.tileMap[x, y].gem.destination = des;
-                            hasFound = true;
-                            des = null;
-                        }
+                        Data.tileMap[x, y].gem.destination = des;
+                        Data.tileMap[des.Value.X, des.Value.Y].gem = Data.tileMap[x, y].gem;
+                        Data.tileMap[x, y].gem = null;
+                        hasFound = true;
+                        des = null;
                     }
 
                     if (hasFound)
@@ -65,18 +66,20 @@ namespace Match3
 
         public static void CheckIfGemCanMove()
         {
-            for (int i = Data.gameObjects.Count - 1; i >= 0; i--)
+            for (int x = 0; x < Data.tileMap.GetLength(0); x++)
             {
-                if (Data.gameObjects[i] is Gem g)
+                for (int y = 0; y < Data.tileMap.GetLength(1); y++)
                 {
-                    if (g.position.Y >= g.destination.Value.ToVector2().Y * Data.tileSize)
+                    if (Data.tileMap[x, y].gem != null && Data.tileMap[x, y].gem.destination != null)
                     {
-                        g.Direction(Direction.none);
-                        Gem temp = new Gem(g.destination.Value.ToVector2() * Data.tileSize, g.gemType);
-                        Data.tileMap[g.destination.Value.X, g.destination.Value.Y].gem = temp;
-                        Data.tileMap[g.destination.Value.X, g.destination.Value.Y].isFilled = true;
-                        Data.gameObjects.RemoveAt(i);
-                        ClearMatches();
+                        if (Data.tileMap[x, y].gem.position.Y >= Data.tileMap[x, y].gem.destination.Value.Y * Data.tileSize)
+                        {
+                            Data.tileMap[x, y].gem.Direction(Direction.none);
+                            Data.tileMap[x, y].gem.position = Data.tileMap[x, y].gem.destination.Value.ToVector2() * Data.tileSize;
+                            Data.tileMap[x, y].isFilled = true;
+                            Data.tileMap[x, y].gem.destination = null;
+                            ClearMatches();
+                        }
                     }
                 }
             }
@@ -98,14 +101,9 @@ namespace Match3
                     {
                         if (Data.tileMap[x, y].gem != null)
                         {
-                            if (Data.tileMap[x, y].gem.destination != null)
+                            if (Data.tileMap[x, y].gem.destination != null && Data.tileMap[x, y].gem.position.Y < Data.tileMap[x, y].gem.destination.Value.Y * Data.tileSize)
                             {
-                                Gem tempGem = Data.tileMap[x, y].gem;
-                                tempGem.Direction(Direction.down);
-
-                                Data.gameObjects.Add(tempGem);
-                                Data.tileMap[x, y].gem = null;
-                                Data.tileMap[x, y].isFilled = false;
+                                Data.tileMap[x, y].gem.Direction(Direction.down);
                             }
                         }
                     }
@@ -164,7 +162,7 @@ namespace Match3
             {
                 for (int y = Data.tileMap.GetLength(1) - 1; y >= 0; y--)
                 {
-                    if (Data.tileMap[x, y].canHaveGem && !Data.tileMap[x, y].isFilled)
+                    if (Data.tileMap[x, y].canHaveGem && Data.tileMap[x, y].gem == null)
                     {
                         emptySlot.Add(new Point(x, y));
                     }
