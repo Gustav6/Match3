@@ -76,7 +76,8 @@ namespace Match3
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            base.Draw(spriteBatch);
+            //base.Draw(spriteBatch);
+            spriteBatch.Draw(TextureManager.textures[gemType], position, color);
             //DrawBoundingBox(spriteBatch);
         }
     }

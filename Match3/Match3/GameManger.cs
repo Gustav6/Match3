@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualBasic;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,10 +12,24 @@ namespace Match3
     public class GameManger
     {
         readonly PlayingFieldInteraction interaction = new();
+        private bool paused;
+        private bool speedUp;
 
         public void Update(GameTime gameTime)
         {
-            PlayingField();
+            if (InputManager.HasBeenPressed(Keys.Tab))
+            {
+                paused = !paused;
+            }
+            if (InputManager.HasBeenPressed(Keys.S))
+            {
+                speedUp = !speedUp;
+            }
+
+            if (!paused)
+            {
+                PlayingField(gameTime);
+            }
             UpdateLoop(gameTime);
             RemoveLoop();
         }
@@ -26,6 +41,12 @@ namespace Match3
             {
                 Data.gameObjects[i].Update(gameTime);
             }
+        }
+
+        public void PlayingField(GameTime gameTime)
+        {
+            PlayingFieldAction.CheckIfGemCanMove();
+            interaction.MoveSelectedGem();
 
             // run update for every gem in the tilemap
             for (int x = 0; x < Data.tileMap.GetLength(0); x++)
@@ -35,12 +56,33 @@ namespace Match3
                     Data.tileMap[x, y].gem?.Update(gameTime);
                 }
             }
-        }
 
-        public void PlayingField()
-        {
-            PlayingFieldAction.CheckIfGemCanMove();
-            interaction.MoveSelectedGem();
+            //if (speedUp)
+            //{
+            //    for (int x = 0; x < Data.tileMap.GetLength(0); x++)
+            //    {
+            //        for (int y = 0; y < Data.tileMap.GetLength(1); y++)
+            //        {
+            //            if (Data.tileMap[x, y].gem != null && Data.tileMap[x, y].gem.velociy != Vector2.Zero)
+            //            {
+            //                Data.tileMap[x, y].gem.moveSpeed = 100;
+            //            }
+            //        }
+            //    }
+            //}
+            //else
+            //{
+            //    for (int x = 0; x < Data.tileMap.GetLength(0); x++)
+            //    {
+            //        for (int y = 0; y < Data.tileMap.GetLength(1); y++)
+            //        {
+            //            if (Data.tileMap[x, y].gem != null && Data.tileMap[x, y].gem.velociy != Vector2.Zero)
+            //            {
+            //                Data.tileMap[x, y].gem.moveSpeed = 10;
+            //            }
+            //        }
+            //    }
+            //}
         }
 
         private static void RemoveLoop()

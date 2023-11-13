@@ -9,6 +9,8 @@ namespace Match3
 {
     public static class Data
     {
+        public static int gamePoints;
+
         public static List<GameObject> gameObjects = new();
 
         public static Tile[,] tileMap;

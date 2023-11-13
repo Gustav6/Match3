@@ -78,6 +78,8 @@ namespace Match3
 
             _spriteBatch.Begin();
 
+            _spriteBatch.DrawString(TextureManager.font, "Gems Left: " + PlayingFieldAction.gemsLeft.ToString(), new Vector2(1000, 50), Color.White);
+            _spriteBatch.DrawString(TextureManager.font, "Points: " + Data.gamePoints.ToString(), new Vector2(1000, 100), Color.Green);
 
             for (int x = 0; x < Data.tileMap.GetLength(0); x++)
             {
@@ -101,7 +103,7 @@ namespace Match3
                 {
                     if (debugF)
                     {
-                        _spriteBatch.Draw(TextureManager.tileTexture, new Vector2(x * Data.tileSize, y * Data.tileSize), Data.tileMap[x, y].isFilled ? Color.Black : Color.White);
+                        _spriteBatch.Draw(TextureManager.tileTexture, new Vector2(x * Data.tileSize, y * Data.tileSize), Data.tileMap[x, y].isFilled ? Color.White : Color.White * 0);
                     }
                     else if (debugT)
                     {

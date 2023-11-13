@@ -14,9 +14,11 @@ namespace Match3
         public static Texture2D tileTexture;
         public static Texture2D boundingBoxTexture;
         public static Texture2D[] textures;
+        public static SpriteFont font;
 
         public static void LoadTextures(ContentManager content, GraphicsDevice graphicsDevice)
         {
+            font = content.Load<SpriteFont>("spritefont");
             textures = new Texture2D[Enum.GetNames<GemType>().Length];
 
             tileTexture = new Texture2D(graphicsDevice, Data.tileSize, Data.tileSize);
