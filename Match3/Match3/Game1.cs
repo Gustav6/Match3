@@ -78,14 +78,15 @@ namespace Match3
 
             _spriteBatch.Begin();
 
-            _spriteBatch.DrawString(TextureManager.font, "Gems Left: " + PlayingFieldAction.gemsLeft.ToString(), new Vector2(1000, 50), Color.White);
-            _spriteBatch.DrawString(TextureManager.font, "Points: " + Data.gamePoints.ToString(), new Vector2(1000, 100), Color.Green);
+            _spriteBatch.DrawString(TextureManager.font, "Gems Left: " + PlayingFieldAction.gemsLeft.ToString(), new Vector2(1000, 75), Color.White);
+            _spriteBatch.DrawString(TextureManager.font, "Points: " + Data.gamePoints.ToString(), new Vector2(1000, 125), Color.Green);
 
             for (int x = 0; x < Data.tileMap.GetLength(0); x++)
             {
                 for (int y = 0; y < Data.tileMap.GetLength(1); y++)
                 {
-                    _spriteBatch.Draw(TextureManager.tileTexture, new Vector2(x * Data.tileSize, y * Data.tileSize), Data.tileMap[x, y].canHaveGem ? Color.White * 0.2f : Color.Blue * 0.2f);
+                    Vector2 temp = new((int)((x * Data.tileLocation + Data.tileMapOffset.X)), (int)((y * Data.tileLocation + Data.tileMapOffset.Y)));
+                    _spriteBatch.Draw(TextureManager.tileTexture, temp, Data.tileMap[x, y].canHaveGem ? Color.White * 0.2f : Color.Blue * 0.2f);
                 }
             }
 
@@ -103,13 +104,20 @@ namespace Match3
                 {
                     if (debugF)
                     {
-                        _spriteBatch.Draw(TextureManager.tileTexture, new Vector2(x * Data.tileSize, y * Data.tileSize), Data.tileMap[x, y].isFilled ? Color.White : Color.White * 0);
+                        if (Data.tileMap[x, y].isFilled)
+                        {
+                            Vector2 temp = new((int)((x * Data.tileLocation + Data.tileMapOffset.X)), (int)((y * Data.tileLocation + Data.tileMapOffset.Y)));
+                            _spriteBatch.Draw(TextureManager.tileTexture, temp, Color.White);
+                            _spriteBatch.DrawString(TextureManager.font, "IsFilled Debug", new Vector2(100, Data.bufferHeight - 100), Color.White);
+                        }
                     }
                     else if (debugT)
                     {
                         if (Data.tileMap[x, y].gem != null)
                         {
-                            _spriteBatch.Draw(TextureManager.tileTexture, new Vector2(x * Data.tileSize, y * Data.tileSize), Color.Purple);
+                            Vector2 temp = new((int)((x * Data.tileLocation + Data.tileMapOffset.X)), (int)((y * Data.tileLocation + Data.tileMapOffset.Y)));
+                            _spriteBatch.Draw(TextureManager.tileTexture, temp, Color.Purple);
+                            _spriteBatch.DrawString(TextureManager.font, "Gem Null Debug", new Vector2(100, Data.bufferHeight - 100), Color.White);
                         }
                     }
                 }

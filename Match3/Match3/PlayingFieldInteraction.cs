@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,9 +15,8 @@ namespace Match3
         private Point? prevGem;
         private Point? currentGem;
 
-        public void MoveSelectedGem()
+        public void MoveSelectedGem(GameTime gameTime)
         {
-            // Input
             if (InputManager.MouseHasBeenPressed(InputManager.currentMS.LeftButton, InputManager.prevMS.LeftButton))
             {
                 GetSelectedGem();
@@ -26,13 +26,9 @@ namespace Match3
             {
                 bool canSwitch = false;
 
-                // Positions for the gems
-                int prevPosX = prevGem.Value.X;
-                int prevPosY = prevGem.Value.Y;
-                int currnetPosX = currentGem.Value.X;
-                int currnetPosY = currentGem.Value.Y;
+                int prevPosX = prevGem.Value.X, prevPosY = prevGem.Value.Y;
+                int currnetPosX = currentGem.Value.X, currnetPosY = currentGem.Value.Y;
 
-                // Check if object can or cant switch
                 if (prevPosX + 1 == currnetPosX && prevPosY == currnetPosY || prevPosX - 1 == currnetPosX && prevPosY == currnetPosY)
                 {
                     canSwitch = true;
@@ -44,21 +40,18 @@ namespace Match3
 
                 if (canSwitch)
                 {
-                    //GemChange(prevGem, currentGem);
-                    
-                    // Saved gem positions
+                    //GemChange(currentGem.Value, prevGem.Value);
+
                     int prevGemType = Data.tileMap[prevPosX, prevPosY].gem.gemType;
                     int currentGemType = Data.tileMap[currnetPosX, currnetPosY].gem.gemType;
 
-                    // Switch the gems positions
-                    Data.tileMap[prevPosX, prevPosY].gem.GemTexture(currentGemType);
-                    Data.tileMap[currnetPosX, currnetPosY].gem.GemTexture(prevGemType);
+                    Data.tileMap[prevPosX, prevPosY].gem.TypeAndTexture(currentGemType);
+                    Data.tileMap[currnetPosX, currnetPosY].gem.TypeAndTexture(prevGemType);
 
-                    // temp change for debbug
-                    VisualChange(currnetPosX, currnetPosY, 1);
-                    VisualChange(prevPosX, prevPosY, 1);
+                    Data.tileMap[currentGem.Value.X, currentGem.Value.Y].gem.scale = new Vector2(1, 1);
+                    Data.tileMap[prevGem.Value.X, prevGem.Value.Y].gem.scale = new Vector2(1, 1);
 
-                    PlayingFieldAction.ClearMatches();
+                    PlayingFieldAction.canClear = true;
 
                     // Check if the new position makes a match if not change them back
                     //if (Data.tileMap[prevPosX, prevPosY].gem != null && Data.tileMap[currnetPosX, currnetPosY].gem != null)
@@ -69,18 +62,25 @@ namespace Match3
                 }
                 else
                 {
-                    // Reset visual selection change if gems dont switch
-                    VisualChange(currnetPosX, currnetPosY, 1);
-                    VisualChange(prevPosX, prevPosY, 1);
+                    Data.tileMap[currentGem.Value.X, currentGem.Value.Y].gem.scale = new Vector2(1, 1);
+                    Data.tileMap[prevGem.Value.X, prevGem.Value.Y].gem.scale = new Vector2(1, 1);
                 }
 
-                // Resets variables after change
                 currentGem = null;
                 prevGem = null;
             }
             else if (currentGem != null)
             {
-                prevGem = currentGem;
+                if (Data.tileMap[currentGem.Value.X, currentGem.Value.Y].isFilled)
+                {
+                    prevGem = currentGem;
+                }
+                else
+                {
+                    Data.tileMap[currentGem.Value.X, currentGem.Value.Y].gem.scale = new Vector2(1, 1);
+                    prevGem = null;
+                    currentGem = null;
+                }
             }
         }
 
@@ -90,20 +90,17 @@ namespace Match3
             {
                 for (int y = 0; y < Data.tileMap.GetLength(1); y++)
                 {
-                    if (Data.tileMap[x, y].gem != null)
+                    if (Data.tileMap[x, y].gem != null && Data.tileMap[x, y].isFilled)
                     {
                         if (InputManager.GetMouseBounds(true).Intersects(Data.tileMap[x, y].gem.boundingBox))
                         {
                             currentGem = new Point(x, y);
 
-                            // Make a visual change when selecting object
-                            VisualChange(currentGem.Value.X, currentGem.Value.Y, 0.7f);
+                            Data.tileMap[currentGem.Value.X, currentGem.Value.Y].gem.scale = new Vector2(1.1f, 1.1f);
 
-                            // Revert change if you press same object and or invalid target
                             if (prevGem != null && Data.tileMap[currentGem.Value.X, currentGem.Value.Y].gem == Data.tileMap[prevGem.Value.X, prevGem.Value.Y].gem)
                             {
-                                VisualChange(currentGem.Value.X, currentGem.Value.Y, 1);
-                                // Resets variables because there was no change
+                                Data.tileMap[currentGem.Value.X, currentGem.Value.Y].gem.scale = new Vector2(1, 1);
                                 prevGem = null;
                                 currentGem = null;
                             }
@@ -117,13 +114,15 @@ namespace Match3
         {
             Data.tileMap[x, y].gem.color = Color.White * newAlpha;
         }
-        public static void DebugChange(int x, int y, Color newColor)
-        {
-            Data.tileMap[x, y].gem.color = newColor;
-        }
 
         public static void GemChange(Point? prev, Point? current)
         {
+            Data.tileMap[prev.Value.X, prev.Value.Y].isFilled = false;
+            Data.tileMap[current.Value.X, current.Value.Y].isFilled = false;
+
+            Data.tileMap[prev.Value.X, prev.Value.Y].gem.destination = Data.tileMap[current.Value.X, current.Value.Y].position;
+            Data.tileMap[current.Value.X, current.Value.Y].gem.destination = Data.tileMap[prev.Value.X, prev.Value.Y].position;
+
             if (prev.Value.Y > current.Value.Y)
             {
                 Data.tileMap[prev.Value.X, prev.Value.Y].gem.Direction(Direction.up);

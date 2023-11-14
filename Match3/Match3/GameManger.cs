@@ -45,8 +45,9 @@ namespace Match3
 
         public void PlayingField(GameTime gameTime)
         {
-            PlayingFieldAction.CheckIfGemCanMove();
-            interaction.MoveSelectedGem();
+            PlayingFieldAction.ChecksForGem();
+            PlayingFieldAction.HasGemReachedDestination(gameTime);
+            interaction.MoveSelectedGem(gameTime);
 
             // run update for every gem in the tilemap
             for (int x = 0; x < Data.tileMap.GetLength(0); x++)
@@ -56,33 +57,6 @@ namespace Match3
                     Data.tileMap[x, y].gem?.Update(gameTime);
                 }
             }
-
-            //if (speedUp)
-            //{
-            //    for (int x = 0; x < Data.tileMap.GetLength(0); x++)
-            //    {
-            //        for (int y = 0; y < Data.tileMap.GetLength(1); y++)
-            //        {
-            //            if (Data.tileMap[x, y].gem != null && Data.tileMap[x, y].gem.velociy != Vector2.Zero)
-            //            {
-            //                Data.tileMap[x, y].gem.moveSpeed = 100;
-            //            }
-            //        }
-            //    }
-            //}
-            //else
-            //{
-            //    for (int x = 0; x < Data.tileMap.GetLength(0); x++)
-            //    {
-            //        for (int y = 0; y < Data.tileMap.GetLength(1); y++)
-            //        {
-            //            if (Data.tileMap[x, y].gem != null && Data.tileMap[x, y].gem.velociy != Vector2.Zero)
-            //            {
-            //                Data.tileMap[x, y].gem.moveSpeed = 10;
-            //            }
-            //        }
-            //    }
-            //}
         }
 
         private static void RemoveLoop()

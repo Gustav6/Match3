@@ -10,10 +10,12 @@ namespace Match3
 {
     public class Gem : Moveable
     {
-        public Rectangle boundingBox;
         public int gemType;
-        public int checkUnder;
+        public Rectangle boundingBox;
         public Point? destination;
+
+        private float startMoveSpeed = 100;
+        private float maxMoveSpeed = 300;
 
         public Gem(Vector2 startPosition, int _gemType)
         {
@@ -21,28 +23,37 @@ namespace Match3
             texutre = TextureManager.textures[_gemType];
             gemType = _gemType;
             color = Color.White;
-            moveSpeed = 60;
+            moveSpeed = startMoveSpeed;
             scale = new Vector2(1, 1);
 
             boundingBox = new Rectangle((int)position.X, (int)position.Y, texutre.Width, texutre.Height);
-            SetSource(TextureManager.textures[0]);
+            SetSourceRectangle(TextureManager.textures[0]);
+            SetOrigin(texutre);
         }
 
         public override void Update(GameTime gameTime)
         {
+            //if (velociy.Y == 1 && moveSpeed < maxMoveSpeed)
+            //{
+            //    moveSpeed *= 1.25f;
+            //}
+            //else if (velociy.Y == 1 && moveSpeed > maxMoveSpeed)
+            //{
+            //    moveSpeed = maxMoveSpeed;
+            //}
+            //else if (velociy == Vector2.Zero)
+            //{
+            //    moveSpeed = startMoveSpeed;
+            //}
+
             base.Update(gameTime);
-            boundingBox.Location = position.ToPoint();
+            boundingBox.Location = new Vector2(position.X - texutre.Width / 2, position.Y - texutre.Height / 2).ToPoint();
         }
 
-        public void GemTexture(int _gemType)
+        public void TypeAndTexture(int _gemType)
         {
             texutre = TextureManager.textures[_gemType];
             gemType = _gemType;
-        }
-
-        public static void SwapSpeed()
-        {
-
         }
 
         public void Direction(Direction dir)
@@ -76,8 +87,7 @@ namespace Match3
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            //base.Draw(spriteBatch);
-            spriteBatch.Draw(TextureManager.textures[gemType], position, color);
+            base.Draw(spriteBatch);
             //DrawBoundingBox(spriteBatch);
         }
     }

@@ -24,9 +24,13 @@ namespace Match3
 
         }
 
-        public void SetSource(Texture2D _texture)
+        public void SetSourceRectangle(Texture2D _texture)
         {
             soureceRectangle = new Rectangle(0, 0, _texture.Width, _texture.Height);
+        }
+        public void SetOrigin(Texture2D _texture)
+        {
+            origin = new Vector2(texutre.Width / 2, texutre.Height / 2);
         }
 
         public static void Destroy(GameObject gameObject)

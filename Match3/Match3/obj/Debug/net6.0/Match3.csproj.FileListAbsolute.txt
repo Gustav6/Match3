@@ -90,3 +90,5 @@ C:\Users\gusta\Documents\Github\Match3\Match3\Match3\obj\Debug\net6.0\Match3.gen
 C:\Users\gusta\Documents\Github\Match3\Match3\Match3\obj\Debug\net6.0\ref\Match3.dll
 C:\Users\gustav.ekstrom1\Documents\GitHub\Match3\Match3\Match3\bin\Debug\net6.0\Content\File.xnb
 C:\Users\gustav.ekstrom1\Documents\GitHub\Match3\Match3\Match3\bin\Debug\net6.0\Content\spritefont.xnb
+C:\Users\gusta\Documents\Github\Match3\Match3\Match3\bin\Debug\net6.0\Content\File.xnb
+C:\Users\gusta\Documents\Github\Match3\Match3\Match3\bin\Debug\net6.0\Content\spritefont.xnb
