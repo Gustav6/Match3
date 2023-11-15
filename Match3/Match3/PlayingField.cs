@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualBasic;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -9,17 +8,147 @@ using System.Threading.Tasks;
 
 namespace Match3
 {
-    public static class PlayingFieldAction
+    public class PlayingField
     {
-        public static int gemsLeft = 500;
-        private static bool anyGemCanMove;
-        private static int amountOfGemsAddedPerRow;
+        public int gemsLeft = 500;
+        private bool anyGemCanMove;
+        private int amountOfGemsAddedPerRow;
 
-        private static float timer = 0.1f;
-        private static float clearDelay = 0.1f;
-        public static bool canClear;
+        private float timer = 0.1f;
+        private float clearDelay = 0.1f;
+        public bool canClear;
 
-        public static void GiveCurrentGemsADestination()
+        private Point? prevGem;
+        private Point? currentGem;
+
+        public void MoveSelectedGem(GameTime gameTime)
+        {
+            if (InputManager.MouseHasBeenPressed(InputManager.currentMS.LeftButton, InputManager.prevMS.LeftButton))
+            {
+                GetSelectedGem();
+            }
+
+            if (prevGem != null && currentGem != null && prevGem != currentGem)
+            {
+                bool canSwitch = false;
+
+                int prevPosX = prevGem.Value.X, prevPosY = prevGem.Value.Y;
+                int currnetPosX = currentGem.Value.X, currnetPosY = currentGem.Value.Y;
+
+                if (prevPosX + 1 == currnetPosX && prevPosY == currnetPosY || prevPosX - 1 == currnetPosX && prevPosY == currnetPosY)
+                {
+                    canSwitch = true;
+                }
+                else if (prevPosX == currnetPosX && prevPosY + 1 == currnetPosY || prevPosX == currnetPosX && prevPosY - 1 == currnetPosY)
+                {
+                    canSwitch = true;
+                }
+
+                if (canSwitch && !canClear)
+                {
+                    //GemChange(currentGem.Value, prevGem.Value);
+
+                    int prevGemType = Data.tileMap[prevGem.Value.X, prevGem.Value.Y].gem.gemType;
+                    int currentGemType = Data.tileMap[currentGem.Value.X, currentGem.Value.Y].gem.gemType;
+
+                    Data.tileMap[prevGem.Value.X, prevGem.Value.Y].gem.TypeAndTexture(currentGemType);
+                    Data.tileMap[currentGem.Value.X, currentGem.Value.Y].gem.TypeAndTexture(prevGemType);
+
+                    Data.tileMap[currentGem.Value.X, currentGem.Value.Y].gem.scale = new Vector2(1, 1);
+                    Data.tileMap[prevGem.Value.X, prevGem.Value.Y].gem.scale = new Vector2(1, 1);
+
+                    List<Point[]> verticalMatches = CheckVertical(), horizontalMatches = CheckHorizontal();
+
+                    if (verticalMatches.Count == 0 && horizontalMatches.Count == 0)
+                    {
+                        Data.tileMap[prevGem.Value.X, prevGem.Value.Y].gem.TypeAndTexture(prevGemType);
+                        Data.tileMap[currentGem.Value.X, currentGem.Value.Y].gem.TypeAndTexture(currentGemType);
+                    }
+
+                    canClear = true;
+                    prevGem = null;
+                    currentGem = null;
+                }
+                else if (!canSwitch)
+                {
+                    Data.tileMap[currentGem.Value.X, currentGem.Value.Y].gem.scale = new Vector2(1, 1);
+                    Data.tileMap[prevGem.Value.X, prevGem.Value.Y].gem.scale = new Vector2(1, 1);
+                    prevGem = null;
+                    currentGem = null;
+                }
+            }
+            else if (currentGem != null)
+            {
+                if (prevGem == null && Data.tileMap[currentGem.Value.X, currentGem.Value.Y].isFilled)
+                {
+                    prevGem = currentGem;
+                }
+            }
+        }
+
+        public void GetSelectedGem()
+        {
+            for (int x = 0; x < Data.tileMap.GetLength(0); x++)
+            {
+                for (int y = 0; y < Data.tileMap.GetLength(1); y++)
+                {
+                    if (Data.tileMap[x, y].gem != null && Data.tileMap[x, y].isFilled)
+                    {
+                        if (InputManager.GetMouseBounds(true).Intersects(Data.tileMap[x, y].gem.boundingBox))
+                        {
+                            currentGem = new Point(x, y);
+
+                            Data.tileMap[currentGem.Value.X, currentGem.Value.Y].gem.scale = new Vector2(1.1f, 1.1f);
+
+                            if (prevGem != null && Data.tileMap[currentGem.Value.X, currentGem.Value.Y].gem == Data.tileMap[prevGem.Value.X, prevGem.Value.Y].gem)
+                            {
+                                Data.tileMap[currentGem.Value.X, currentGem.Value.Y].gem.scale = new Vector2(1, 1);
+                                prevGem = null;
+                                currentGem = null;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        public void GemChange(Point? prev, Point? current)
+        {
+            //int currentGemType = Data.tileMap[current.Value.X, current.Value.Y].gem.gemType;
+            //int prevGemType = Data.tileMap[prev.Value.X, prev.Value.Y].gem.gemType;
+
+            //Data.tileMap[prev.Value.X, prev.Value.Y].gem.gemType = currentGemType;
+            //Data.tileMap[current.Value.X, current.Value.Y].gem.gemType = prevGemType;
+
+            //Data.tileMap[prev.Value.X, prev.Value.Y].isFilled = false;
+            //Data.tileMap[current.Value.X, current.Value.Y].isFilled = false;
+
+            //Data.tileMap[current.Value.X, current.Value.Y].gem.destination = Data.tileMap[prev.Value.X, prev.Value.Y].position;
+            //Data.tileMap[prev.Value.X, prev.Value.Y].gem.destination = Data.tileMap[current.Value.X, current.Value.Y].position;
+
+            if (prev.Value.Y > current.Value.Y)
+            {
+                Data.tileMap[current.Value.X, current.Value.Y].gem.Direction(Direction.down);
+                Data.tileMap[prev.Value.X, prev.Value.Y].gem.Direction(Direction.up);
+            }
+            else if (prev.Value.Y < current.Value.Y)
+            {
+                Data.tileMap[current.Value.X, current.Value.Y].gem.Direction(Direction.up);
+                Data.tileMap[prev.Value.X, prev.Value.Y].gem.Direction(Direction.down);
+            }
+            else if (prev.Value.X > current.Value.X)
+            {
+                Data.tileMap[current.Value.X, current.Value.Y].gem.Direction(Direction.right);
+                Data.tileMap[prev.Value.X, prev.Value.Y].gem.Direction(Direction.left);
+            }
+            else if (prev.Value.X < current.Value.X)
+            {
+                Data.tileMap[current.Value.X, current.Value.Y].gem.Direction(Direction.left);
+                Data.tileMap[prev.Value.X, prev.Value.Y].gem.Direction(Direction.right);
+            }
+        }
+
+        public void GiveGemsDestination()
         {
             for (int x = 0; x < Data.tileMap.GetLength(0); x++)
             {
@@ -51,19 +180,33 @@ namespace Match3
             }
         }
 
-        public static void HasGemReachedDestination(GameTime gameTime)
+        public void HasGemReachedDestination(GameTime gameTime)
         {
             for (int x = 0; x < Data.tileMap.GetLength(0); x++)
             {
-                for (int y = 0; y < Data.tileMap.GetLength(1); y++)
+                for (int y = Data.tileMap.GetLength(1) - 1; y >= 0; y--)
                 {
                     if (Data.tileMap[x, y].gem != null && Data.tileMap[x, y].gem.destination != null)
                     {
-                        if (Data.tileMap[x, y].gem.position.Y >= Data.tileMap[x, y].gem.destination.Value.Y * Data.tileLocation + Data.tileMapOffset.Y + Data.gemOrigin.Y)
+                        float yDestination = Data.tileMap[x, y].gem.destination.Value.Y * Data.tileLocation + Data.tileMapOffset.Y;
+                        float xDestination = Data.tileMap[x, y].gem.destination.Value.X * Data.tileLocation + Data.tileMapOffset.X;
+
+                        if (Data.tileMap[x, y].gem.velociy.X == 0)
                         {
-                            ChangeGem(x, y);
-                            canClear = true;
+                            if (Data.tileMap[x, y].gem.position.Y >= yDestination)
+                            {
+                                ChangeGem(x, y);
+                            }
                         }
+
+                        //if (Data.tileMap[x, y].gem.velociy.Y == 0 && Data.tileMap[x, y].gem.destination != null)
+                        //{
+                        //    if (Data.tileMap[x, y].gem.destination.Value.X > Data.tileMap[x, y].position.X && Data.tileMap[x, y].gem.position.X >= xDestination ||
+                        //        Data.tileMap[x, y].gem.destination.Value.X < Data.tileMap[x, y].position.X && Data.tileMap[x, y].gem.position.X <= xDestination)
+                        //    {
+                        //        ChangeGem(x, y);
+                        //    }
+                        //}
                     }
                 }
             }
@@ -71,25 +214,25 @@ namespace Match3
             if (canClear)
             {
                 ClearMatches(gameTime);
-                canClear = true;
             }
         }
 
-        public static void ChangeGem(int x, int y)
+        public void ChangeGem(int x, int y)
         {
             Data.tileMap[x, y].gem.Direction(Direction.none);
-            Data.tileMap[x, y].gem.position = Data.tileMap[x, y].gem.destination.Value.ToVector2() * Data.tileLocation + Data.tileMapOffset + Data.gemOrigin;
+            Data.tileMap[x, y].gem.position = Data.tileMap[x, y].gem.destination.Value.ToVector2() * Data.tileLocation + Data.tileMapOffset;
             Data.tileMap[x, y].gem.destination = null;
             Data.tileMap[x, y].isFilled = true;
+            canClear = true;
         }
 
-        public static void ChecksForGem()
+        public void CheckPlayingField()
         {
             CheckIfGemsCanMove();
 
             if (anyGemCanMove)
             {
-                GiveCurrentGemsADestination();
+                GiveGemsDestination();
             }
 
             if (gemsLeft > 0)
@@ -98,7 +241,7 @@ namespace Match3
             }
         }
 
-        private static void CheckIfGemsCanMove()
+        private void CheckIfGemsCanMove()
         {
             bool gemCanMove;
 
@@ -121,7 +264,7 @@ namespace Match3
             }
         }
 
-        public static void SpawnNewGems()
+        public void SpawnNewGems()
         {
             List<Point> emptySlot = new();
 
@@ -132,6 +275,7 @@ namespace Match3
                     if (Data.tileMap[x, y].canHaveGem && Data.tileMap[x, y].gem == null)
                     {
                         emptySlot.Add(new Point(x, y));
+
                     }
                 }
 
@@ -140,8 +284,11 @@ namespace Match3
                     if (gemsLeft > 0)
                     {
                         int randomGem = Data.Random(0, TextureManager.textures.Length);
-                        Gem temp = new(new(x * Data.tileLocation + Data.tileMapOffset.X + Data.gemOrigin.X, (-Data.tileSize) - amountOfGemsAddedPerRow * Data.tileLocation), randomGem);
-                        temp.destination = emptySlot[i];
+                        Gem temp = new(new(x * Data.tileLocation + Data.tileMapOffset.X, (-Data.tileSize) - amountOfGemsAddedPerRow * Data.tileLocation), randomGem)
+                        {
+                            destination = emptySlot[i]
+                        };
+
                         temp.Direction(Direction.down);
                         Data.tileMap[x, emptySlot[i].Y].gem = temp;
                         amountOfGemsAddedPerRow++;
@@ -154,7 +301,7 @@ namespace Match3
             }
         }
 
-        public static void ClearMatches(GameTime gameTime)
+        public void ClearMatches(GameTime gameTime)
         {
             if (timer <= 0)
             {
@@ -180,6 +327,7 @@ namespace Match3
                 }
 
                 timer = clearDelay;
+                canClear = false;
             }
             else
             {
@@ -245,8 +393,8 @@ namespace Match3
                 for (int x = 0; x < Data.tileMap.GetLength(0); x++)
                 {
 
-                    if (currentGem != null && Data.tileMap[x, y].gem != null && currentGem.gemType == Data.tileMap[x, y].gem.gemType 
-                        && Data.tileMap[x, y].gem.velociy == Vector2.Zero && currentGem.position.Y == Data.tileMap[x, y].gem.position.Y 
+                    if (currentGem != null && Data.tileMap[x, y].gem != null && currentGem.gemType == Data.tileMap[x, y].gem.gemType
+                        && Data.tileMap[x, y].gem.velociy == Vector2.Zero && currentGem.position.Y == Data.tileMap[x, y].gem.position.Y
                         && Data.tileMap[x, y].isFilled)
                     {
                         tempMatches.Add(new Point(x, y));

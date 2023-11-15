@@ -23,7 +23,7 @@ namespace Match3
                 {
                     if (Data.tileMap[x, y].canHaveGem)
                     {
-                        Vector2 temp = new(x * Data.tileLocation + Data.tileMapOffset.X + Data.gemOrigin.X, y * Data.tileLocation + Data.tileMapOffset.Y + Data.gemOrigin.Y);
+                        Vector2 temp = new(x * Data.tileLocation + Data.tileMapOffset.X, y * Data.tileLocation + Data.tileMapOffset.Y);
                         Data.tileMap[x, y] = new Tile() { gem = new Gem(temp, Data.Random(0, TextureManager.textures.Length)), canHaveGem = true, position = new Point(x, y), isFilled = true };
 
                         if (Data.InBounds(x, y - 2) && Data.tileMap[x, y - 2].gem != null && Data.tileMap[x, y].gem != null)

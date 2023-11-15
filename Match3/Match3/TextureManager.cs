@@ -14,6 +14,7 @@ namespace Match3
         public static Texture2D tileTexture;
         public static Texture2D boundingBoxTexture;
         public static Texture2D[] textures;
+        public static Texture2D explosionTexture;
         public static SpriteFont font;
 
         public static void LoadTextures(ContentManager content, GraphicsDevice graphicsDevice)
@@ -32,6 +33,7 @@ namespace Match3
             boundingBoxTexture = new Texture2D(graphicsDevice, 1, 1);
             boundingBoxTexture.SetData<Color>(new Color[] { Color.Green * 0.8f });
 
+            explosionTexture = content.Load<Texture2D>("visualEffect");
             textures[(int)GemType.blueGemTexture] = (content.Load<Texture2D>("gemBlue"));
             textures[(int)GemType.greenGemTexture] = content.Load<Texture2D>("gemGreen");
             textures[(int)GemType.purpleGemTexture] = content.Load<Texture2D>("gemPurple");

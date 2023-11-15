@@ -14,7 +14,7 @@ namespace Match3
         public Rectangle boundingBox;
         public Point? destination;
 
-        private float startMoveSpeed = 100;
+        private float startMoveSpeed = 300;
         private float maxMoveSpeed = 300;
 
         public Gem(Vector2 startPosition, int _gemType)
@@ -27,7 +27,7 @@ namespace Match3
             scale = new Vector2(1, 1);
 
             boundingBox = new Rectangle((int)position.X, (int)position.Y, texutre.Width, texutre.Height);
-            SetSourceRectangle(TextureManager.textures[0]);
+            SetSourceRectangle(texutre);
             SetOrigin(texutre);
         }
 

@@ -11,7 +11,6 @@ namespace Match3
 {
     public class GameManger
     {
-        readonly PlayingFieldInteraction interaction = new();
         private bool paused;
         private bool speedUp;
 
@@ -45,9 +44,9 @@ namespace Match3
 
         public void PlayingField(GameTime gameTime)
         {
-            PlayingFieldAction.ChecksForGem();
-            PlayingFieldAction.HasGemReachedDestination(gameTime);
-            interaction.MoveSelectedGem(gameTime);
+            Data.playingField.CheckPlayingField();
+            Data.playingField.HasGemReachedDestination(gameTime);
+            Data.playingField.MoveSelectedGem(gameTime);
 
             // run update for every gem in the tilemap
             for (int x = 0; x < Data.tileMap.GetLength(0); x++)
