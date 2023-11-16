@@ -35,7 +35,6 @@ namespace Match3
 
         private static void UpdateLoop(GameTime gameTime)
         {
-            // run updatefor every game object in game objects list
             for (int i = 0; i < Data.gameObjects.Count; i++)
             {
                 Data.gameObjects[i].Update(gameTime);
@@ -46,9 +45,8 @@ namespace Match3
         {
             Data.playingField.CheckPlayingField();
             Data.playingField.HasGemReachedDestination(gameTime);
-            Data.playingField.MoveSelectedGem(gameTime);
+            Data.playingField.MoveSelectedGem();
 
-            // run update for every gem in the tilemap
             for (int x = 0; x < Data.tileMap.GetLength(0); x++)
             {
                 for (int y = 0; y < Data.tileMap.GetLength(1); y++)

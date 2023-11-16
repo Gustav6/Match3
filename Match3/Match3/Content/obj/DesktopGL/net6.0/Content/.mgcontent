@@ -4,13 +4,13 @@
   <Platform>DesktopGL</Platform>
   <Config />
   <SourceFiles>
-    <File>C:/Users/gusta/Documents/Github/Match3/Match3/Match3/Content/File.spritefont</File>
-    <File>C:/Users/gusta/Documents/Github/Match3/Match3/Match3/Content/Free Smoke Fx  Pixel 05.png</File>
-    <File>C:/Users/gusta/Documents/Github/Match3/Match3/Match3/Content/gemBlue.png</File>
-    <File>C:/Users/gusta/Documents/Github/Match3/Match3/Match3/Content/gemGreen.png</File>
-    <File>C:/Users/gusta/Documents/Github/Match3/Match3/Match3/Content/gemPurple.png</File>
-    <File>C:/Users/gusta/Documents/Github/Match3/Match3/Match3/Content/gemRed.png</File>
-    <File>C:/Users/gusta/Documents/Github/Match3/Match3/Match3/Content/gemYellow.png</File>
+    <File>C:/Users/gustav.ekstrom1/Documents/GitHub/Match3/Match3/Match3/Content/File.spritefont</File>
+    <File>C:/Users/gustav.ekstrom1/Documents/GitHub/Match3/Match3/Match3/Content/Free Smoke Fx  Pixel 05.png</File>
+    <File>C:/Users/gustav.ekstrom1/Documents/GitHub/Match3/Match3/Match3/Content/gemBlue.png</File>
+    <File>C:/Users/gustav.ekstrom1/Documents/GitHub/Match3/Match3/Match3/Content/gemGreen.png</File>
+    <File>C:/Users/gustav.ekstrom1/Documents/GitHub/Match3/Match3/Match3/Content/gemPurple.png</File>
+    <File>C:/Users/gustav.ekstrom1/Documents/GitHub/Match3/Match3/Match3/Content/gemRed.png</File>
+    <File>C:/Users/gustav.ekstrom1/Documents/GitHub/Match3/Match3/Match3/Content/gemYellow.png</File>
   </SourceFiles>
   <DestFiles>
     <File>spritefont</File>

@@ -10,7 +10,7 @@ namespace Match3
 {
     public abstract class GameObject
     {
-        public Texture2D texutre;
+        public Texture2D texture;
         public Vector2 position;
         public Color color;
         public bool isRemoved;
@@ -30,7 +30,7 @@ namespace Match3
         }
         public void SetOrigin(Texture2D _texture)
         {
-            origin = new Vector2(texutre.Width / 2, texutre.Height / 2);
+            origin = new Vector2(_texture.Width / 2, _texture.Height / 2);
         }
 
         public static void Destroy(GameObject gameObject)
@@ -40,7 +40,7 @@ namespace Match3
 
         public virtual void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(texutre, position, soureceRectangle, color, rotation, origin, scale, SpriteEffects.None, 0);
+            spriteBatch.Draw(texture, position, soureceRectangle, color, rotation, origin, scale, SpriteEffects.None, 0);
         }
     }
 }

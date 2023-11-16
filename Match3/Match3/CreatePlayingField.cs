@@ -28,7 +28,7 @@ namespace Match3
 
                         if (Data.InBounds(x, y - 2) && Data.tileMap[x, y - 2].gem != null && Data.tileMap[x, y].gem != null)
                         {
-                            if (Data.tileMap[x, y].gem.texutre == Data.tileMap[x, y - 2].gem.texutre)
+                            if (Data.tileMap[x, y].gem.texture == Data.tileMap[x, y - 2].gem.texture)
                             {
                                 Data.tileMap[x, y].gem = null;
                                 y--;
@@ -37,7 +37,7 @@ namespace Match3
 
                         if (Data.InBounds(x - 2, y) && Data.tileMap[x - 2, y].gem != null && Data.tileMap[x, y].gem != null)
                         {
-                            if (Data.tileMap[x, y].gem.texutre == Data.tileMap[x - 2, y].gem.texutre)
+                            if (Data.tileMap[x, y].gem.texture == Data.tileMap[x - 2, y].gem.texture)
                             {
                                 Data.tileMap[x, y].gem = null;
                                 y--;

@@ -6,7 +6,6 @@ namespace Match3
 {
     public class Game1 : Game
     {
-        private Explosion explosion;
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
         private bool debugF;
@@ -28,8 +27,6 @@ namespace Match3
         protected override void Initialize()
         {
             base.Initialize();
-
-            explosion = new(new (1000, 200));
 
             CreatePlayingField.CreateNewPlayingField(new int[,]
             {
@@ -61,7 +58,10 @@ namespace Match3
 
             InputManager.GetInput();
 
-            explosion.Update(gameTime);
+            for (int i = 0; i < Data.explosions.Count; i++)
+            {
+                Data.explosions[i].Update(gameTime);
+            }
 
             if (InputManager.HasBeenPressed(Keys.Q))
             {
@@ -83,15 +83,20 @@ namespace Match3
 
             _spriteBatch.Begin();
 
-            _spriteBatch.DrawString(TextureManager.font, "Gems Left: " + Data.playingField.gemsLeft.ToString(), new Vector2(1000, 75), Color.White);
-            _spriteBatch.DrawString(TextureManager.font, "Points: " + Data.gamePoints.ToString(), new Vector2(1000, 125), Color.Green);
+            _spriteBatch.DrawString(TextureManager.font, "Gems Left: " + Data.playingField.gemsLeft.ToString(), new Vector2(1000, 100), Color.White);
+            _spriteBatch.DrawString(TextureManager.font, "Total Points: " + Data.gamePoints.ToString(), new Vector2(1000, 175), Color.White);
 
             for (int x = 0; x < Data.tileMap.GetLength(0); x++)
             {
                 for (int y = 0; y < Data.tileMap.GetLength(1); y++)
                 {
                     Vector2 temp = new((int)((x * Data.tileLocation + Data.tileMapOffset.X) - Data.gemOrigin.X), (int)((y * Data.tileLocation + Data.tileMapOffset.Y) - Data.gemOrigin.Y));
-                    //_spriteBatch.Draw(TextureManager.tileTexture, temp, Data.tileMap[x, y].canHaveGem ? Color.White * 0.2f : Color.Blue * 0.2f);
+                    temp.Y -= (Data.tileSize - Data.gemSize) / 2;
+                    temp.X -= (Data.tileSize - Data.gemSize) / 2;
+                    if (Data.tileMap[x, y].canHaveGem)
+                    {
+                        _spriteBatch.Draw(TextureManager.tileTexture, temp,  Color.White * 0.5f);
+                    }
 
                     Data.tileMap[x, y].gem?.Draw(_spriteBatch);
 
@@ -118,7 +123,10 @@ namespace Match3
                 Data.gameObjects[i].Draw(_spriteBatch);
             }
 
-            explosion.Draw(_spriteBatch);
+            for (int i = 0; i < Data.explosions.Count; i++)
+            {
+                Data.explosions[i].Draw(_spriteBatch);
+            }
 
             _spriteBatch.End();
 

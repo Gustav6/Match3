@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <SourceFile>C:/Users/gusta/Documents/Github/Match3/Match3/Match3/Content/gemGreen.png</SourceFile>
-  <SourceTime>2023-10-18T16:27:38.0562737+02:00</SourceTime>
-  <DestFile>C:/Users/gusta/Documents/Github/Match3/Match3/Match3/Content/bin/DesktopGL/Content/gemGreen.xnb</DestFile>
-  <DestTime>2023-11-13T20:53:10.1629409+01:00</DestTime>
+  <SourceFile>C:/Users/gustav.ekstrom1/Documents/GitHub/Match3/Match3/Match3/Content/gemGreen.png</SourceFile>
+  <SourceTime>2023-11-14T10:39:50.2939572+01:00</SourceTime>
+  <DestFile>C:/Users/gustav.ekstrom1/Documents/GitHub/Match3/Match3/Match3/Content/bin/DesktopGL/Content/gemGreen.xnb</DestFile>
+  <DestTime>2023-11-16T12:53:54.5661511+01:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2022-07-26T13:44:56+02:00</ImporterTime>
   <Processor>TextureProcessor</Processor>

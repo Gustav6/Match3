@@ -12,6 +12,8 @@ namespace Match3
     {
         private readonly Texture2D texture;
 
+        private readonly Vector2 origin;
+
         private readonly List<Rectangle> sourceRects = new();
 
         private readonly int frames;
@@ -64,11 +66,16 @@ namespace Match3
                 fraimeTimeLeft += frameTime;
                 frame = (frame + 1) % frames;
             }
+
+            if (frame == frames - 1)
+            {
+                isActive = false;
+            }
         }
 
-        public void Draw(SpriteBatch spriteBatch, Vector2 position)
+        public void Draw(SpriteBatch spriteBatch, Vector2 position, Vector2 scale, Color color)
         {
-            spriteBatch.Draw(texture, position, sourceRects[frame], Color.White, 0, Vector2.Zero, Vector2.One, SpriteEffects.None, 1);
+            spriteBatch.Draw(texture, position, sourceRects[frame], color, 0, Vector2.Zero, scale, SpriteEffects.None, 1);
         }
     }
 }

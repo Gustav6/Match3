@@ -13,18 +13,23 @@ namespace Match3
         public static int gamePoints;
 
         public static List<GameObject> gameObjects = new();
+        public static List<Explosion> explosions = new();
         public static readonly PlayingField playingField = new();
-
-        public static Tile[,] tileMap;
-
-        public static int tileSize = 64;
-        public static float tileSpacing = 1.1f;
-        public static Vector2 gemOrigin = new (32, 32);
-        public static int tileLocation = (int)(tileSize * tileSpacing);
-        public static Vector2 tileMapOffset = new (75 + gemOrigin.X, 75 + gemOrigin.Y);
 
         public static int bufferWidth = 1920;
         public static int bufferHeight = 1080;
+
+        public static Tile[,] tileMap;
+
+        public static int gemSize = 64;
+        public static int gemMaxMoveSpeed = 600;
+        public static int gemStartSpeed = 75;
+
+        public static int tileSize = 72;
+        public static float tileSpacing = 1.2f;
+        public static Vector2 gemOrigin = new (32, 32);
+        public static int tileLocation = (int)(gemSize * tileSpacing);
+        public static Vector2 tileMapOffset = new (50 + gemOrigin.X, 100 + gemOrigin.Y);
 
         public static int Random(int minimumValue, int maximumValue)
         {

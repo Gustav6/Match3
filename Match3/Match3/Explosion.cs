@@ -14,13 +14,19 @@ namespace Match3
 
         private Vector2 position;
 
+        private Color color;
+
+        private Vector2 scale;
+
         private readonly Animation animation;
 
-        public Explosion(Vector2 startPosition)
+        public Explosion(Vector2 startPosition, Color _color)
         {
             texture ??= TextureManager.explosionTexture;
             animation = new(texture, 11, 15, 0.1f, 7);
             position = startPosition;
+            color = _color;
+            scale = new(2, 2);
         }
 
         public void Update(GameTime gameTime)
@@ -30,7 +36,7 @@ namespace Match3
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            animation.Draw(spriteBatch, position);
+            animation.Draw(spriteBatch, position, scale, color);
         }
     }
 }

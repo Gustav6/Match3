@@ -1,11 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "qbveONjvq08GXGPVYKPr4XL1VZXNBXQ8NPDhuSYzAdnk+saQum/NMw7R6B/abHCJSWKOszICvlMlp4cdnvfQ3g==",
+  "dgSpecHash": "WArYhvtglChBOop7Ek9RBinjl9EhhGIk4kWwAOQLfJqfaMQot2zopEKcLixIHy00/lbUo2YXK/6tLc/5gEilPw==",
   "success": true,
-  "projectFilePath": "C:\\Users\\gusta\\Documents\\Github\\Match3\\Match3\\Match3\\Match3.csproj",
+  "projectFilePath": "C:\\Users\\gustav.ekstrom1\\Documents\\GitHub\\Match3\\Match3\\Match3\\Match3.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\gusta\\.nuget\\packages\\monogame.content.builder.task\\3.8.1.303\\monogame.content.builder.task.3.8.1.303.nupkg.sha512",
-    "C:\\Users\\gusta\\.nuget\\packages\\monogame.framework.desktopgl\\3.8.1.303\\monogame.framework.desktopgl.3.8.1.303.nupkg.sha512"
+    "C:\\Users\\gustav.ekstrom1\\.nuget\\packages\\monogame.content.builder.task\\3.8.1.303\\monogame.content.builder.task.3.8.1.303.nupkg.sha512",
+    "C:\\Users\\gustav.ekstrom1\\.nuget\\packages\\monogame.framework.desktopgl\\3.8.1.303\\monogame.framework.desktopgl.3.8.1.303.nupkg.sha512"
   ],
   "logs": []
 }

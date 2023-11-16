@@ -14,21 +14,18 @@ namespace Match3
         public Rectangle boundingBox;
         public Point? destination;
 
-        private float startMoveSpeed = 300;
-        private float maxMoveSpeed = 300;
-
         public Gem(Vector2 startPosition, int _gemType)
         {
             position = startPosition;
-            texutre = TextureManager.textures[_gemType];
+            texture = TextureManager.textures[_gemType];
             gemType = _gemType;
             color = Color.White;
-            moveSpeed = startMoveSpeed;
+            moveSpeed = Data.gemStartSpeed;
             scale = new Vector2(1, 1);
 
-            boundingBox = new Rectangle((int)position.X, (int)position.Y, texutre.Width, texutre.Height);
-            SetSourceRectangle(texutre);
-            SetOrigin(texutre);
+            boundingBox = new Rectangle((int)position.X, (int)position.Y, texture.Width, texture.Height);
+            SetSourceRectangle(texture);
+            SetOrigin(texture);
         }
 
         public override void Update(GameTime gameTime)
@@ -47,12 +44,12 @@ namespace Match3
             //}
 
             base.Update(gameTime);
-            boundingBox.Location = new Vector2(position.X - texutre.Width / 2, position.Y - texutre.Height / 2).ToPoint();
+            boundingBox.Location = new Vector2(position.X - texture.Width / 2, position.Y - texture.Height / 2).ToPoint();
         }
 
         public void TypeAndTexture(int _gemType)
         {
-            texutre = TextureManager.textures[_gemType];
+            texture = TextureManager.textures[_gemType];
             gemType = _gemType;
         }
 

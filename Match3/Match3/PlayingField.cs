@@ -21,7 +21,7 @@ namespace Match3
         private Point? prevGem;
         private Point? currentGem;
 
-        public void MoveSelectedGem(GameTime gameTime)
+        public void MoveSelectedGem()
         {
             if (InputManager.MouseHasBeenPressed(InputManager.currentMS.LeftButton, InputManager.prevMS.LeftButton))
             {
@@ -32,14 +32,14 @@ namespace Match3
             {
                 bool canSwitch = false;
 
-                int prevPosX = prevGem.Value.X, prevPosY = prevGem.Value.Y;
-                int currnetPosX = currentGem.Value.X, currnetPosY = currentGem.Value.Y;
+                Point prevPos = new Point(prevGem.Value.X, prevGem.Value.Y);
+                Point currnetPos = new Point(currentGem.Value.X, currentGem.Value.Y);
 
-                if (prevPosX + 1 == currnetPosX && prevPosY == currnetPosY || prevPosX - 1 == currnetPosX && prevPosY == currnetPosY)
+                if (prevPos.X + 1 == currnetPos.X && prevPos.Y == currnetPos.Y || prevPos.X - 1 == currnetPos.X && prevPos.Y == currnetPos.Y)
                 {
                     canSwitch = true;
                 }
-                else if (prevPosX == currnetPosX && prevPosY + 1 == currnetPosY || prevPosX == currnetPosX && prevPosY - 1 == currnetPosY)
+                else if (prevPos.X == currnetPos.X && prevPos.Y + 1 == currnetPos.Y || prevPos.X == currnetPos.X && prevPos.Y - 1 == currnetPos.Y)
                 {
                     canSwitch = true;
                 }
@@ -54,7 +54,6 @@ namespace Match3
                     Data.tileMap[prevGem.Value.X, prevGem.Value.Y].gem.TypeAndTexture(currentGemType);
                     Data.tileMap[currentGem.Value.X, currentGem.Value.Y].gem.TypeAndTexture(prevGemType);
 
-                    Data.tileMap[currentGem.Value.X, currentGem.Value.Y].gem.scale = new Vector2(1, 1);
                     Data.tileMap[prevGem.Value.X, prevGem.Value.Y].gem.scale = new Vector2(1, 1);
 
                     List<Point[]> verticalMatches = CheckVertical(), horizontalMatches = CheckHorizontal();
@@ -71,15 +70,14 @@ namespace Match3
                 }
                 else if (!canSwitch)
                 {
-                    Data.tileMap[currentGem.Value.X, currentGem.Value.Y].gem.scale = new Vector2(1, 1);
                     Data.tileMap[prevGem.Value.X, prevGem.Value.Y].gem.scale = new Vector2(1, 1);
                     prevGem = null;
                     currentGem = null;
                 }
             }
-            else if (currentGem != null)
+            else if (currentGem != null && prevGem == null)
             {
-                if (prevGem == null && Data.tileMap[currentGem.Value.X, currentGem.Value.Y].isFilled)
+                if (Data.tileMap[currentGem.Value.X, currentGem.Value.Y].isFilled)
                 {
                     prevGem = currentGem;
                 }
@@ -98,9 +96,12 @@ namespace Match3
                         {
                             currentGem = new Point(x, y);
 
-                            Data.tileMap[currentGem.Value.X, currentGem.Value.Y].gem.scale = new Vector2(1.1f, 1.1f);
+                            if (prevGem == null)
+                            {
+                                Data.tileMap[currentGem.Value.X, currentGem.Value.Y].gem.scale = new Vector2(0.9f, 0.9f);
+                            }
 
-                            if (prevGem != null && Data.tileMap[currentGem.Value.X, currentGem.Value.Y].gem == Data.tileMap[prevGem.Value.X, prevGem.Value.Y].gem)
+                            if (prevGem != null && prevGem == currentGem)
                             {
                                 Data.tileMap[currentGem.Value.X, currentGem.Value.Y].gem.scale = new Vector2(1, 1);
                                 prevGem = null;
@@ -184,12 +185,13 @@ namespace Match3
         {
             for (int x = 0; x < Data.tileMap.GetLength(0); x++)
             {
+                bool rowHasMovingGem = false;
+
                 for (int y = Data.tileMap.GetLength(1) - 1; y >= 0; y--)
                 {
                     if (Data.tileMap[x, y].gem != null && Data.tileMap[x, y].gem.destination != null)
                     {
                         float yDestination = Data.tileMap[x, y].gem.destination.Value.Y * Data.tileLocation + Data.tileMapOffset.Y;
-                        float xDestination = Data.tileMap[x, y].gem.destination.Value.X * Data.tileLocation + Data.tileMapOffset.X;
 
                         if (Data.tileMap[x, y].gem.velociy.X == 0)
                         {
@@ -197,16 +199,36 @@ namespace Match3
                             {
                                 ChangeGem(x, y);
                             }
+                            else
+                            {
+                                rowHasMovingGem = true;
+                            }
                         }
+                    }
+                }
 
-                        //if (Data.tileMap[x, y].gem.velociy.Y == 0 && Data.tileMap[x, y].gem.destination != null)
-                        //{
-                        //    if (Data.tileMap[x, y].gem.destination.Value.X > Data.tileMap[x, y].position.X && Data.tileMap[x, y].gem.position.X >= xDestination ||
-                        //        Data.tileMap[x, y].gem.destination.Value.X < Data.tileMap[x, y].position.X && Data.tileMap[x, y].gem.position.X <= xDestination)
-                        //    {
-                        //        ChangeGem(x, y);
-                        //    }
-                        //}
+                for (int y = Data.tileMap.GetLength(1) - 1; y >= 0; y--)
+                {
+                    if (rowHasMovingGem)
+                    {
+                        if (Data.tileMap[x, y].gem != null && Data.tileMap[x, y].gem.velociy != Vector2.Zero)
+                        {
+                            if (Data.tileMap[x, y].gem.moveSpeed < Data.gemMaxMoveSpeed)
+                            {
+                                float moveSpeedIncrease = 1.05f;
+                                Data.tileMap[x, y].gem.moveSpeed *= moveSpeedIncrease;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (Data.tileMap[x, y].gem != null && Data.tileMap[x, y].gem.velociy == Vector2.Zero)
+                        {
+                            if (Data.tileMap[x, y].gem.moveSpeed > Data.gemStartSpeed)
+                            {
+                                Data.tileMap[x, y].gem.moveSpeed = Data.gemStartSpeed;
+                            }
+                        }
                     }
                 }
             }
@@ -284,7 +306,7 @@ namespace Match3
                     if (gemsLeft > 0)
                     {
                         int randomGem = Data.Random(0, TextureManager.textures.Length);
-                        Gem temp = new(new(x * Data.tileLocation + Data.tileMapOffset.X, (-Data.tileSize) - amountOfGemsAddedPerRow * Data.tileLocation), randomGem)
+                        Gem temp = new(new(x * Data.tileLocation + Data.tileMapOffset.X, (-Data.gemSize) - amountOfGemsAddedPerRow * Data.tileLocation), randomGem)
                         {
                             destination = emptySlot[i]
                         };
@@ -311,6 +333,8 @@ namespace Match3
                 {
                     foreach (Point point in points)
                     {
+                        Vector2 temp = new(point.X * Data.tileLocation + Data.tileMapOffset.X - 64, point.Y * Data.tileLocation + Data.tileMapOffset.Y - 64);
+                        Data.explosions.Add(new Explosion(temp, Color.White));
                         Data.tileMap[point.X, point.Y].gem = null;
                         Data.tileMap[point.X, point.Y].isFilled = false;
                         Data.gamePoints += 100;
@@ -320,6 +344,8 @@ namespace Match3
                 {
                     foreach (Point point in points)
                     {
+                        Vector2 temp = new(point.X * Data.tileLocation + Data.tileMapOffset.X - 64, point.Y * Data.tileLocation + Data.tileMapOffset.Y - 64);
+                        Data.explosions.Add(new Explosion(temp, Color.White));
                         Data.tileMap[point.X, point.Y].gem = null;
                         Data.tileMap[point.X, point.Y].isFilled = false;
                         Data.gamePoints += 100;
