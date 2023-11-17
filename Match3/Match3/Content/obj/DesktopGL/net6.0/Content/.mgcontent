@@ -4,17 +4,35 @@
   <Platform>DesktopGL</Platform>
   <Config />
   <SourceFiles>
-    <File>C:/Users/gustav.ekstrom1/Documents/GitHub/Match3/Match3/Match3/Content/File.spritefont</File>
-    <File>C:/Users/gustav.ekstrom1/Documents/GitHub/Match3/Match3/Match3/Content/Free Smoke Fx  Pixel 05.png</File>
-    <File>C:/Users/gustav.ekstrom1/Documents/GitHub/Match3/Match3/Match3/Content/gemBlue.png</File>
-    <File>C:/Users/gustav.ekstrom1/Documents/GitHub/Match3/Match3/Match3/Content/gemGreen.png</File>
-    <File>C:/Users/gustav.ekstrom1/Documents/GitHub/Match3/Match3/Match3/Content/gemPurple.png</File>
-    <File>C:/Users/gustav.ekstrom1/Documents/GitHub/Match3/Match3/Match3/Content/gemRed.png</File>
-    <File>C:/Users/gustav.ekstrom1/Documents/GitHub/Match3/Match3/Match3/Content/gemYellow.png</File>
+    <File>C:/Users/gusta/Documents/Github/Match3/Match3/Match3/Content/background.jpg</File>
+    <File>C:/Users/gusta/Documents/Github/Match3/Match3/Match3/Content/backgroundMusic.mp3</File>
+    <File>C:/Users/gusta/Documents/Github/Match3/Match3/Match3/Content/blueGem.png</File>
+    <File>C:/Users/gusta/Documents/Github/Match3/Match3/Match3/Content/clearGem.png</File>
+    <File>C:/Users/gusta/Documents/Github/Match3/Match3/Match3/Content/collect.wav</File>
+    <File>C:/Users/gusta/Documents/Github/Match3/Match3/Match3/Content/File.spritefont</File>
+    <File>C:/Users/gusta/Documents/Github/Match3/Match3/Match3/Content/Free Smoke Fx  Pixel 05.png</File>
+    <File>C:/Users/gusta/Documents/Github/Match3/Match3/Match3/Content/gem1.png</File>
+    <File>C:/Users/gusta/Documents/Github/Match3/Match3/Match3/Content/gem2.png</File>
+    <File>C:/Users/gusta/Documents/Github/Match3/Match3/Match3/Content/gem3.png</File>
+    <File>C:/Users/gusta/Documents/Github/Match3/Match3/Match3/Content/gem4.png</File>
+    <File>C:/Users/gusta/Documents/Github/Match3/Match3/Match3/Content/gem5.png</File>
+    <File>C:/Users/gusta/Documents/Github/Match3/Match3/Match3/Content/greenGem.png</File>
+    <File>C:/Users/gusta/Documents/Github/Match3/Match3/Match3/Content/purpleGem.png</File>
+    <File>C:/Users/gusta/Documents/Github/Match3/Match3/Match3/Content/redGem.png</File>
+    <File>C:/Users/gusta/Documents/Github/Match3/Match3/Match3/Content/yellowGem.png</File>
   </SourceFiles>
   <DestFiles>
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
     <File>spritefont</File>
     <File>visualEffect.png</File>
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />

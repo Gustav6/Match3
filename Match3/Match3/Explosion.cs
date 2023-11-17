@@ -23,7 +23,7 @@ namespace Match3
         public Explosion(Vector2 startPosition, Color _color)
         {
             texture ??= TextureManager.explosionTexture;
-            animation = new(texture, 11, 15, 0.1f, 7);
+            animation = new(texture, 11, 15, 0.08f, 8);
             position = startPosition;
             color = _color;
             scale = new(2, 2);

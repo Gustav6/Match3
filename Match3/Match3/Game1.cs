@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
 
 namespace Match3
 {
@@ -9,7 +10,8 @@ namespace Match3
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
         private bool debugF;
-        private bool debugT;
+        private bool debugG;
+        private bool debugS;
 
         private readonly GameManger gameManager = new();
 
@@ -28,6 +30,8 @@ namespace Match3
         {
             base.Initialize();
 
+            MenuManager.Initialize();
+
             CreatePlayingField.CreateNewPlayingField(new int[,]
             {
                 {0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0},
@@ -42,12 +46,16 @@ namespace Match3
                 {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0},
                 {0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0}
             });
+
+            MediaPlayer.Play(SoundManager.backgroundMusic);
         }
 
         protected override void LoadContent()
         {
+            Data.graphicsDevice = GraphicsDevice;
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
+            SoundManager.LoadSounds(Content);
             TextureManager.LoadTextures(Content, GraphicsDevice);
         }
 
@@ -67,9 +75,13 @@ namespace Match3
             {
                 debugF = !debugF;
             }
-            if (InputManager.HasBeenPressed(Keys.W))
+            else if (InputManager.HasBeenPressed(Keys.W))
             {
-                debugT = !debugT;
+                debugG = !debugG;
+            }
+            else if (InputManager.HasBeenPressed(Keys.E))
+            {
+                debugS = !debugS;
             }
 
             gameManager.Update(gameTime);
@@ -83,8 +95,10 @@ namespace Match3
 
             _spriteBatch.Begin();
 
-            _spriteBatch.DrawString(TextureManager.font, "Gems Left: " + Data.playingField.gemsLeft.ToString(), new Vector2(1000, 100), Color.White);
-            _spriteBatch.DrawString(TextureManager.font, "Total Points: " + Data.gamePoints.ToString(), new Vector2(1000, 175), Color.White);
+            _spriteBatch.Draw(TextureManager.background, new Vector2(0, 0), Color.White);
+
+            _spriteBatch.DrawString(TextureManager.font, "Gems Left In Mine: \n" + Data.playingField.gemsLeft.ToString(), new Vector2(1500, 100), Color.White);
+            _spriteBatch.DrawString(TextureManager.font, "Total Gems Mined: \n" + Data.gemsCollected.ToString(), new Vector2(1500, 200), Color.White);
 
             for (int x = 0; x < Data.tileMap.GetLength(0); x++)
             {
@@ -93,9 +107,10 @@ namespace Match3
                     Vector2 temp = new((int)((x * Data.tileLocation + Data.tileMapOffset.X) - Data.gemOrigin.X), (int)((y * Data.tileLocation + Data.tileMapOffset.Y) - Data.gemOrigin.Y));
                     temp.Y -= (Data.tileSize - Data.gemSize) / 2;
                     temp.X -= (Data.tileSize - Data.gemSize) / 2;
+
                     if (Data.tileMap[x, y].canHaveGem)
                     {
-                        _spriteBatch.Draw(TextureManager.tileTexture, temp,  Color.White * 0.5f);
+                        _spriteBatch.Draw(TextureManager.tileTexture, temp,  Color.MediumPurple * 0.5f);
                     }
 
                     Data.tileMap[x, y].gem?.Draw(_spriteBatch);
@@ -104,16 +119,25 @@ namespace Match3
                     {
                         if (Data.tileMap[x, y].isFilled)
                         {
-                            _spriteBatch.Draw(TextureManager.tileTexture, temp, Color.White);
+                            _spriteBatch.Draw(TextureManager.tileTexture, temp, Color.Red);
                             _spriteBatch.DrawString(TextureManager.font, "IsFilled Debug", new Vector2(100, Data.bufferHeight - 100), Color.White);
                         }
                     }
-                    else if (debugT)
+                    else if (debugG)
                     {
                         if (Data.tileMap[x, y].gem != null)
                         {
-                            _spriteBatch.Draw(TextureManager.tileTexture, temp, Color.Purple);
+                            _spriteBatch.Draw(TextureManager.tileTexture, temp, Color.Green);
                             _spriteBatch.DrawString(TextureManager.font, "Gem Null Debug", new Vector2(100, Data.bufferHeight - 100), Color.White);
+                        }
+                    }
+                    else if (debugS)
+                    {
+                        if (Data.tileMap[x, y].gem != null && Data.tileMap[x, y].canHaveGem)
+                        {
+                            _spriteBatch.Draw(TextureManager.tileTexture, temp, Color.White);
+                            _spriteBatch.DrawString(TextureManager.font, Data.tileMap[x, y].gem.gemType.ToString(), new Vector2(temp.X + Data.gemSize / 2.8f, temp.Y + Data.gemSize / 5), Color.Black);
+                            _spriteBatch.DrawString(TextureManager.font, "Gem Type Debug", new Vector2(100, Data.bufferHeight - 100), Color.White);
                         }
                     }
                 }

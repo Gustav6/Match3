@@ -12,17 +12,14 @@ namespace Match3
     public class GameManger
     {
         private bool paused;
-        private bool speedUp;
 
         public void Update(GameTime gameTime)
         {
+            MenuManager.Update();
+
             if (InputManager.HasBeenPressed(Keys.Tab))
             {
                 paused = !paused;
-            }
-            if (InputManager.HasBeenPressed(Keys.S))
-            {
-                speedUp = !speedUp;
             }
 
             if (!paused)
@@ -41,7 +38,7 @@ namespace Match3
             }
         }
 
-        public void PlayingField(GameTime gameTime)
+        public static void PlayingField(GameTime gameTime)
         {
             Data.playingField.CheckPlayingField();
             Data.playingField.HasGemReachedDestination(gameTime);

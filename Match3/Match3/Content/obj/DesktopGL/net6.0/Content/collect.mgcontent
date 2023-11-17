@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <SourceFile>C:/Users/gusta/Documents/Github/Match3/Match3/Match3/Content/collect.wav</SourceFile>
+  <SourceTime>2023-11-16T22:11:15.3775051+01:00</SourceTime>
+  <DestFile>C:/Users/gusta/Documents/Github/Match3/Match3/Match3/Content/bin/DesktopGL/Content/collect.xnb</DestFile>
+  <DestTime>2023-11-16T22:24:42.118788+01:00</DestTime>
+  <Importer>WavImporter</Importer>
+  <ImporterTime>2022-07-26T13:44:56+02:00</ImporterTime>
+  <Processor>SoundEffectProcessor</Processor>
+  <ProcessorTime>2022-07-26T13:44:56+02:00</ProcessorTime>
+  <Parameters>
+    <Key>Quality</Key>
+    <Value>Best</Value>
+  </Parameters>
+  <Dependencies />
+  <BuildAsset />
+  <BuildOutput />
+</PipelineBuildEvent>

@@ -21,11 +21,12 @@ namespace Match3
             gemType = _gemType;
             color = Color.White;
             moveSpeed = Data.gemStartSpeed;
-            scale = new Vector2(1, 1);
 
-            boundingBox = new Rectangle((int)position.X, (int)position.Y, texture.Width, texture.Height);
+            SetScale(0.125f, 0.125f);
             SetSourceRectangle(texture);
             SetOrigin(texture);
+
+            boundingBox = new Rectangle((int)position.X, (int)position.Y, (int)(texture.Width * scale.X), (int)(texture.Height * scale.Y));
         }
 
         public override void Update(GameTime gameTime)
@@ -44,7 +45,8 @@ namespace Match3
             //}
 
             base.Update(gameTime);
-            boundingBox.Location = new Vector2(position.X - texture.Width / 2, position.Y - texture.Height / 2).ToPoint();
+            boundingBox.Size = new Vector2(texture.Width * scale.X, texture.Height * scale.Y).ToPoint();
+            boundingBox.Location = new Vector2(position.X - (texture.Width * scale.X) / 2, position.Y - (texture.Height * scale.Y) / 2).ToPoint();
         }
 
         public void TypeAndTexture(int _gemType)

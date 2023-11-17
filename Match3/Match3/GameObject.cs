@@ -33,6 +33,11 @@ namespace Match3
             origin = new Vector2(_texture.Width / 2, _texture.Height / 2);
         }
 
+        public void SetScale(float scaleX, float scaleY)
+        {
+            scale = new Vector2(scaleX, scaleY);
+        }
+
         public static void Destroy(GameObject gameObject)
         {
             gameObject.isRemoved = true;

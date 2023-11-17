@@ -12,8 +12,6 @@ namespace Match3
     {
         private readonly Texture2D texture;
 
-        private readonly Vector2 origin;
-
         private readonly List<Rectangle> sourceRects = new();
 
         private readonly int frames;

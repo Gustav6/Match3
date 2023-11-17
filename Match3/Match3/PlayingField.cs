@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Media;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -10,7 +11,8 @@ namespace Match3
 {
     public class PlayingField
     {
-        public int gemsLeft = 500;
+        public int maxGemsThatCanBeAdded = 500;
+        public int gemsLeft;
         private bool anyGemCanMove;
         private int amountOfGemsAddedPerRow;
 
@@ -20,6 +22,11 @@ namespace Match3
 
         private Point? prevGem;
         private Point? currentGem;
+
+        public PlayingField()
+        {
+            gemsLeft = maxGemsThatCanBeAdded;
+        }
 
         public void MoveSelectedGem()
         {
@@ -32,14 +39,11 @@ namespace Match3
             {
                 bool canSwitch = false;
 
-                Point prevPos = new Point(prevGem.Value.X, prevGem.Value.Y);
-                Point currnetPos = new Point(currentGem.Value.X, currentGem.Value.Y);
+                Point prevPos = new(prevGem.Value.X, prevGem.Value.Y);
+                Point currnetPos = new(currentGem.Value.X, currentGem.Value.Y);
 
-                if (prevPos.X + 1 == currnetPos.X && prevPos.Y == currnetPos.Y || prevPos.X - 1 == currnetPos.X && prevPos.Y == currnetPos.Y)
-                {
-                    canSwitch = true;
-                }
-                else if (prevPos.X == currnetPos.X && prevPos.Y + 1 == currnetPos.Y || prevPos.X == currnetPos.X && prevPos.Y - 1 == currnetPos.Y)
+                if (prevPos.X + 1 == currnetPos.X && prevPos.Y == currnetPos.Y || prevPos.X - 1 == currnetPos.X && prevPos.Y == currnetPos.Y ||
+                    prevPos.X == currnetPos.X && prevPos.Y + 1 == currnetPos.Y || prevPos.X == currnetPos.X && prevPos.Y - 1 == currnetPos.Y)
                 {
                     canSwitch = true;
                 }
@@ -54,7 +58,7 @@ namespace Match3
                     Data.tileMap[prevGem.Value.X, prevGem.Value.Y].gem.TypeAndTexture(currentGemType);
                     Data.tileMap[currentGem.Value.X, currentGem.Value.Y].gem.TypeAndTexture(prevGemType);
 
-                    Data.tileMap[prevGem.Value.X, prevGem.Value.Y].gem.scale = new Vector2(1, 1);
+                    Data.tileMap[prevGem.Value.X, prevGem.Value.Y].gem.scale = new Vector2(0.125f, 0.125f);
 
                     List<Point[]> verticalMatches = CheckVertical(), horizontalMatches = CheckHorizontal();
 
@@ -70,7 +74,7 @@ namespace Match3
                 }
                 else if (!canSwitch)
                 {
-                    Data.tileMap[prevGem.Value.X, prevGem.Value.Y].gem.scale = new Vector2(1, 1);
+                    Data.tileMap[prevGem.Value.X, prevGem.Value.Y].gem.scale = new Vector2(0.125f, 0.125f);
                     prevGem = null;
                     currentGem = null;
                 }
@@ -98,12 +102,12 @@ namespace Match3
 
                             if (prevGem == null)
                             {
-                                Data.tileMap[currentGem.Value.X, currentGem.Value.Y].gem.scale = new Vector2(0.9f, 0.9f);
+                                Data.tileMap[currentGem.Value.X, currentGem.Value.Y].gem.scale = new Vector2(0.1f, 0.1f);
                             }
 
                             if (prevGem != null && prevGem == currentGem)
                             {
-                                Data.tileMap[currentGem.Value.X, currentGem.Value.Y].gem.scale = new Vector2(1, 1);
+                                Data.tileMap[currentGem.Value.X, currentGem.Value.Y].gem.scale = new Vector2(0.125f, 0.125f);
                                 prevGem = null;
                                 currentGem = null;
                             }
@@ -335,10 +339,13 @@ namespace Match3
                     {
                         Vector2 temp = new(point.X * Data.tileLocation + Data.tileMapOffset.X - 64, point.Y * Data.tileLocation + Data.tileMapOffset.Y - 64);
                         Data.explosions.Add(new Explosion(temp, Color.White));
+
                         Data.tileMap[point.X, point.Y].gem = null;
                         Data.tileMap[point.X, point.Y].isFilled = false;
-                        Data.gamePoints += 100;
+                        Data.gemsCollected += 100;
                     }
+
+                    SoundManager.collectSound.Play(Data.volume, 0.5f, 1);
                 }
                 foreach (Point[] points in verticalMatches)
                 {
@@ -346,10 +353,13 @@ namespace Match3
                     {
                         Vector2 temp = new(point.X * Data.tileLocation + Data.tileMapOffset.X - 64, point.Y * Data.tileLocation + Data.tileMapOffset.Y - 64);
                         Data.explosions.Add(new Explosion(temp, Color.White));
+
                         Data.tileMap[point.X, point.Y].gem = null;
                         Data.tileMap[point.X, point.Y].isFilled = false;
-                        Data.gamePoints += 100;
+                        Data.gemsCollected += 100;
                     }
+
+                    SoundManager.collectSound.Play(Data.volume, 0.5f, 1);
                 }
 
                 timer = clearDelay;
@@ -369,7 +379,7 @@ namespace Match3
 
             for (int x = 0; x < Data.tileMap.GetLength(0); x++)
             {
-                for (int y = 0; y < Data.tileMap.GetLength(0); y++)
+                for (int y = 0; y < Data.tileMap.GetLength(1); y++)
                 {
                     if (currentGem != null && Data.tileMap[x, y].gem != null && currentGem.gemType == Data.tileMap[x, y].gem.gemType
                         && Data.tileMap[x, y].gem.velociy == Vector2.Zero && currentGem.position.X == Data.tileMap[x, y].gem.position.X
@@ -414,7 +424,7 @@ namespace Match3
             List<Point[]> totalMatches = new();
             List<Point> tempMatches = new();
 
-            for (int y = 0; y < Data.tileMap.GetLength(0); y++)
+            for (int y = 0; y < Data.tileMap.GetLength(1); y++)
             {
                 for (int x = 0; x < Data.tileMap.GetLength(0); x++)
                 {
